@@ -1,34 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Settings;
+namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\ModuleRequest;
-use App\Services\Backend\Settings\ModuleService;
-use App\Traits\CommonTrait;
+use App\Services\Frontend\AboutUsService;
 use Exception;
-use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
-
-    /**
-     * Common traits
-     */
-    use CommonTrait;
-
+class AboutUsController extends BackendController
+{
     /**
      * Module Service
      */
-    private $moduleService;
+    private $aboutUsService;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(AboutUsService $aboutUsService)
     {
         parent::__construct();
 
-        $this->moduleService = $moduleService;
+        $this->aboutUsService = $aboutUsService;
     }
 
     /**
@@ -39,8 +28,8 @@ class ModuleController extends BackendController {
     public function index()
     {
         self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
-        self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['addUrl'] = route('admin.setting.module.create');
+        self::$data['modules'] = $this->moduleService->getAllModule();
 
         return view("backend.settings.module.list", self::$data);
     }
@@ -73,6 +62,7 @@ class ModuleController extends BackendController {
             $this->moduleService->store($validated);
             return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
+            dd($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

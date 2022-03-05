@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Settings;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\ModuleRequest;
-use App\Services\Backend\Settings\ModuleService;
+use App\Http\Requests\Backend\EventRequest;
+use App\Services\Backend\EventService;
 use App\Traits\CommonTrait;
 use Exception;
 use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
-
+class EventController extends BackendController
+{
     /**
      * Common traits
      */
@@ -19,16 +19,13 @@ class ModuleController extends BackendController {
     /**
      * Module Service
      */
-    private $moduleService;
+    private $eventService;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(EventService $eventService)
     {
         parent::__construct();
 
-        $this->moduleService = $moduleService;
+        $this->eventService = $eventService;
     }
 
     /**
@@ -38,11 +35,14 @@ class ModuleController extends BackendController {
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
-        self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['heading'] = __('messages.events') . ' ' . __('messages.list');
+        self::$data['lists'] =  $lists = $this->eventService->getAll();
+        self::$data['keys'] = $this->getKeysFromExtractedData($lists);
+        self::$data['addUrl']  = route('admin.event.create');
+        self::$data['deleteUrl']  = 'admin.event.destroy';
+        self::$data['editUrl']  = 'admin.event.edit';
 
-        return view("backend.settings.module.list", self::$data);
+        return view("backend.common.list", self::$data);
     }
 
     /**
@@ -52,12 +52,12 @@ class ModuleController extends BackendController {
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.module');
+        self::$data['heading'] = __('messages.events');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.setting.module.list');
-        self::$data['requestUrl'] = route('admin.setting.module.store');
+        self::$data['backUrl'] = route('admin.event.list');
+        self::$data['requestUrl'] = route('admin.event.store');
         self::$data['requestMethod'] = 'POST';
-        return view("backend.settings.module.create", self::$data);
+        return view("backend.event.form", self::$data);
     }
 
     /**
@@ -66,15 +66,35 @@ class ModuleController extends BackendController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ModuleRequest $request)
+    public function store(EventRequest $request)
     {
         try {
-            $validated = $request->validated();
-            $this->moduleService->store($validated);
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
+            if (!$request->isAjax()) {
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
+            }
+
+            if ($request->hasFile('file')) {
+                $this->eventService->storeFile($request);
+                $module = 'event image';
+            } else {
+                $validated = $request->validated();
+                $this->eventService->store($validated);
+                $module = 'event';
+            }
+
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.save', ['RECORD' => $module])
+            ];
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
         }
+        return response()->json($response);
     }
 
     /**
@@ -97,14 +117,14 @@ class ModuleController extends BackendController {
     public function edit($id)
     {
         try {
-            self::$data['module'] = $this->moduleService->getModuleById($id);
+            self::$data['events'] = $this->eventService->getById($id);
             self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
-            self::$data['backUrl'] = route('admin.setting.module.list');
+            self::$data['requestUrl'] = route('admin.event.update', ['id' => self::$data['events']->id]);
+            self::$data['backUrl'] = route('admin.event.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
-            return view("backend.settings.module.create", self::$data);
+            return view("backend.event.form", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -117,13 +137,13 @@ class ModuleController extends BackendController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ModuleRequest $request, $id)
+    public function update(EventRequest $request, $id)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->update($validated, $id);
+            $this->eventService->update($validated, $request, $id);
 
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.event.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -138,13 +158,13 @@ class ModuleController extends BackendController {
     public function destroy($id)
     {
         try {
-            $this->moduleService->destroy($id);
+            $this->eventService->destroy($id);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Module']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.setting.module.list")
+                'redirectUrl' => route("admin.event.list")
             ];
         } catch (Exception $e) {
             $response = [

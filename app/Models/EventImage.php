@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class EventImage extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'event_images';
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +22,8 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'description',
-        'code',
-        'status',
+        'event_id',
+        'front_show',
         'created_by',
         'updated_by',
         'created_at',

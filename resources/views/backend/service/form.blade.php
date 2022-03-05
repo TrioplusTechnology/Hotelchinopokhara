@@ -1,0 +1,132 @@
+@extends('layouts.backend.main')
+@section('styles')
+<style>
+    img#previewImg {
+        max-width: 300px;
+        max-height: 300px;
+    }
+</style>
+@endsection
+@section('content')
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">{{ $heading }}</h3>
+            </div>
+            <!-- /.card-header -->
+
+            <form method="{{ $requestMethod }}" action="{{ $requestUrl }}" enctype="multipart/form-data">
+                @csrf
+                @if(isset($services))
+                <input type="hidden" name="_method" value="PUT">
+                @endif
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="title">{{ __('messages.title') }}</label>
+                                <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="{{ __('messages.title') }}" value="{{ old('title', isset($services) ? $services->title : '' ) }}">
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="slug">{{ __('messages.slug') }}</label>
+                                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" id="slug" placeholder="{{ __('messages.slug') }}" value="{{ old('slug', isset($services) ? $services->slug : '') }}">
+                                @error('code')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="status">{{ __('messages.status') }}</label>
+                                <select name="status" class="form-control @error('status') is-invalid @enderror" id="module_status">
+                                    <option value="1" {{ (old('status', (isset($services) ? $services->status : '')) == 1) ? 'selected' : '' }}>True</option>
+                                    <option value="0" {{ (old('status', (isset($services) ? $services->status : '')) == 0) ? 'selected' : '' }}>False</option>
+                                </select>
+                                @error('status')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="order">{{ __('messages.order') }}</label>
+                                <input type="number" name="order" class="form-control @error('order') is-invalid @enderror" id="order" placeholder="{{ __('messages.order') }}" value="{{ old('order', isset($services) ? $services->order : '') }}">
+                                @error('order')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description">{{ __('messages.description') }}</label>
+                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="summernote" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($services) ? $services->description : '' ) }}</textarea>
+                                @error('description')
+                                <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="image">{{ __('messages.image') }}</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="image" name="image">
+                                    <label class="custom-file-label" for="customFile" id="file_name">{{ isset($services) ? $services->image : "Choose file" }}</label>
+                                </div>
+                                @error('image')
+                                <span class="invalid-feedback" role="alert" style="display: inline;">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <img id="previewImg" src="{{ isset($services) ? asset('storage/'.$services->image) : '' }}" max-width="500px">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                </div>
+                <!-- /.row -->
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button type="submit" class="btn bg-gradient-success btn-flat">{{ $btnName }}</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+@endsection
+
+@section('scripts')
+
+<script>
+    $(document).ready(() => {
+        $("#image").change(function() {
+            const file = this.files[0];
+            console.log(file);
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    $("#previewImg")
+                        .attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+                $("#file_name").html("").html(file.name);
+            }
+        });
+    });
+</script>
+
+@endsection

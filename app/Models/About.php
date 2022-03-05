@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class About extends Model
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'about_us';
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +22,13 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'description',
+        'title',
+        'sub_title',
+        'image',
         'code',
         'status',
+        'order',
+        'description',
         'created_by',
         'updated_by',
         'created_at',
@@ -32,8 +41,6 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'created_by',
-        'updated_by',
         'created_at',
         'updated_at'
     ];

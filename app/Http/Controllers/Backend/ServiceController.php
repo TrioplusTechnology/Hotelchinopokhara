@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Settings;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\ModuleRequest;
-use App\Services\Backend\Settings\ModuleService;
+use App\Http\Requests\Backend\ServiceRequest;
+use App\Services\Backend\Service;
 use App\Traits\CommonTrait;
 use Exception;
-use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
-
+class ServiceController extends BackendController
+{
     /**
      * Common traits
      */
@@ -19,16 +18,13 @@ class ModuleController extends BackendController {
     /**
      * Module Service
      */
-    private $moduleService;
+    private $service;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(Service $service)
     {
         parent::__construct();
 
-        $this->moduleService = $moduleService;
+        $this->service = $service;
     }
 
     /**
@@ -38,11 +34,14 @@ class ModuleController extends BackendController {
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
-        self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['heading'] = __('messages.services') . ' ' . __('messages.list');
+        self::$data['lists'] =  $lists = $this->service->getAll();
+        self::$data['keys'] = $this->getKeysFromExtractedData($lists);
+        self::$data['addUrl']  = route('admin.service.create');
+        self::$data['deleteUrl']  = 'admin.service.destroy';
+        self::$data['editUrl']  = 'admin.service.edit';
 
-        return view("backend.settings.module.list", self::$data);
+        return view("backend.common.list", self::$data);
     }
 
     /**
@@ -52,12 +51,12 @@ class ModuleController extends BackendController {
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.module');
+        self::$data['heading'] = __('messages.services');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.setting.module.list');
-        self::$data['requestUrl'] = route('admin.setting.module.store');
+        self::$data['backUrl'] = route('admin.service.list');
+        self::$data['requestUrl'] = route('admin.service.store');
         self::$data['requestMethod'] = 'POST';
-        return view("backend.settings.module.create", self::$data);
+        return view("backend.service.form", self::$data);
     }
 
     /**
@@ -66,12 +65,12 @@ class ModuleController extends BackendController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ModuleRequest $request)
+    public function store(ServiceRequest $request)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->store($validated);
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
+            $this->service->store($validated, $request);
+            return redirect()->route("admin.service.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -97,14 +96,14 @@ class ModuleController extends BackendController {
     public function edit($id)
     {
         try {
-            self::$data['module'] = $this->moduleService->getModuleById($id);
+            self::$data['services'] = $this->service->getById($id);
             self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
-            self::$data['backUrl'] = route('admin.setting.module.list');
+            self::$data['requestUrl'] = route('admin.service.update', ['id' => self::$data['services']->id]);
+            self::$data['backUrl'] = route('admin.service.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
-            return view("backend.settings.module.create", self::$data);
+            return view("backend.service.form", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -117,13 +116,13 @@ class ModuleController extends BackendController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ModuleRequest $request, $id)
+    public function update(ServiceRequest $request, $id)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->update($validated, $id);
+            $this->service->update($validated, $request, $id);
 
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.service.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -138,13 +137,13 @@ class ModuleController extends BackendController {
     public function destroy($id)
     {
         try {
-            $this->moduleService->destroy($id);
+            $this->service->destroy($id);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Module']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.setting.module.list")
+                'redirectUrl' => route("admin.service.list")
             ];
         } catch (Exception $e) {
             $response = [

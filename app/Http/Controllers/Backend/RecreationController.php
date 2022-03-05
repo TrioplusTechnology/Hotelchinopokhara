@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Settings;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\ModuleRequest;
-use App\Services\Backend\Settings\ModuleService;
+use App\Http\Requests\Backend\RecreationRequest;
+use App\Services\Backend\RecreationService;
 use App\Traits\CommonTrait;
 use Exception;
-use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
-
+class RecreationController extends BackendController
+{
     /**
      * Common traits
      */
@@ -19,16 +18,13 @@ class ModuleController extends BackendController {
     /**
      * Module Service
      */
-    private $moduleService;
+    private $recreationService;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(RecreationService $recreationService)
     {
         parent::__construct();
 
-        $this->moduleService = $moduleService;
+        $this->recreationService = $recreationService;
     }
 
     /**
@@ -38,11 +34,14 @@ class ModuleController extends BackendController {
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
-        self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['heading'] = __('messages.recreation') . ' ' . __('messages.list');
+        self::$data['lists'] =  $lists = $this->recreationService->getAll();
+        self::$data['keys'] = $this->getKeysFromExtractedData($lists);
+        self::$data['addUrl']  = route('admin.recreation.create');
+        self::$data['deleteUrl']  = 'admin.recreation.destroy';
+        self::$data['editUrl']  = 'admin.recreation.edit';
 
-        return view("backend.settings.module.list", self::$data);
+        return view("backend.common.list", self::$data);
     }
 
     /**
@@ -52,12 +51,12 @@ class ModuleController extends BackendController {
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.module');
+        self::$data['heading'] = __('messages.recreation');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.setting.module.list');
-        self::$data['requestUrl'] = route('admin.setting.module.store');
+        self::$data['backUrl'] = route('admin.recreation.list');
+        self::$data['requestUrl'] = route('admin.recreation.store');
         self::$data['requestMethod'] = 'POST';
-        return view("backend.settings.module.create", self::$data);
+        return view("backend.recreation.form", self::$data);
     }
 
     /**
@@ -66,12 +65,12 @@ class ModuleController extends BackendController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ModuleRequest $request)
+    public function store(RecreationRequest $request)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->store($validated);
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
+            $this->recreationService->store($validated, $request);
+            return redirect()->route("admin.recreation.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -97,14 +96,14 @@ class ModuleController extends BackendController {
     public function edit($id)
     {
         try {
-            self::$data['module'] = $this->moduleService->getModuleById($id);
+            self::$data['recreations'] = $this->recreationService->getById($id);
             self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
-            self::$data['backUrl'] = route('admin.setting.module.list');
+            self::$data['requestUrl'] = route('admin.recreation.update', ['id' => self::$data['recreations']->id]);
+            self::$data['backUrl'] = route('admin.recreation.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
-            return view("backend.settings.module.create", self::$data);
+            return view("backend.recreation.form", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -117,13 +116,13 @@ class ModuleController extends BackendController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ModuleRequest $request, $id)
+    public function update(RecreationRequest $request, $id)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->update($validated, $id);
+            $this->recreationService->update($validated, $request, $id);
 
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.recreation.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -138,13 +137,13 @@ class ModuleController extends BackendController {
     public function destroy($id)
     {
         try {
-            $this->moduleService->destroy($id);
+            $this->recreationService->destroy($id);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Module']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.setting.module.list")
+                'redirectUrl' => route("admin.recreation.list")
             ];
         } catch (Exception $e) {
             $response = [

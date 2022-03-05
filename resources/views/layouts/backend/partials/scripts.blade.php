@@ -4,13 +4,7 @@
 <script src="{{ asset('js/backend/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('js/backend/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-  $(function() {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-</script>
+
 <!-- Bootstrap 4 -->
 <script src="{{ asset('js/backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- ChartJS -->
@@ -41,3 +35,15 @@
 <script src="{{ asset('js/backend/plugins/toastr/toastr.min.js') }}"></script>
 <!-- <script src="{{ asset('js/backend/plugins/sweetalert2/sweetalert2.min.js') }}"></script> -->
 <script src="{{ asset('js/backend/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<!-- dropzonejs -->
+<script src="{{ asset('js/backend/plugins/dropzone/min/dropzone.min.js') }}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+
+    // Summernote
+    $('#summernote').summernote()
+  })
+</script>

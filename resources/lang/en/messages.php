@@ -47,6 +47,19 @@ return [
   'update' => 'Update',
   'confrim_title' => 'Are you sure ?',
   'confirm_delete_message' => 'Once deleted, you will not be able to recover this record',
+  'about_us' => 'About us',
+  'title' => 'Title',
+  'sub_title' => 'Sub Title',
+  'description' => 'Description',
+  'image' => 'Image',
+  'slug' => 'Slug',
+  'status' => 'Status',
+  'code' => 'Code',
+  'order' => 'Order',
+  'recreation' => 'Recreation',
+  'services' => 'Services',
+  'slug' => 'Slug',
+  'events' => 'Event',
 
   /**
    * Error messages
@@ -55,7 +68,8 @@ return [
     'failed_to_save' => 'Unbale to save :RECORD',
     'failed_to_update' => 'Unbale to update :RECORD',
     'failed_to_delete' => 'Unbale to delete :RECORD',
-    'not_found' => ':RECORD not found.'
+    'not_found' => ':RECORD not found.',
+    'direct_script_not_allowed' => 'Direct script access not allowed!'
   ],
 
   'success' => [

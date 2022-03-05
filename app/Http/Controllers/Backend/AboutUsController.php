@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Settings;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\ModuleRequest;
-use App\Services\Backend\Settings\ModuleService;
+use App\Http\Requests\Backend\AboutUsRequest;
+use App\Services\Backend\AboutUsService;
 use App\Traits\CommonTrait;
 use Exception;
-use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
-
+class AboutUsController extends BackendController
+{
     /**
      * Common traits
      */
@@ -19,16 +18,13 @@ class ModuleController extends BackendController {
     /**
      * Module Service
      */
-    private $moduleService;
+    private $aboutUsService;
 
-    /**
-     * Constructor
-     */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(AboutUsService $aboutUsService)
     {
         parent::__construct();
 
-        $this->moduleService = $moduleService;
+        $this->aboutUsService = $aboutUsService;
     }
 
     /**
@@ -38,11 +34,14 @@ class ModuleController extends BackendController {
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
-        self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['heading'] = __('messages.about_us') . ' ' . __('messages.list');
+        self::$data['lists'] =  $lists = $this->aboutUsService->getAll();
+        self::$data['keys'] = $this->getKeysFromExtractedData($lists);
+        self::$data['addUrl']  = route('admin.about_us.create');
+        self::$data['deleteUrl']  = 'admin.about_us.destroy';
+        self::$data['editUrl']  = 'admin.about_us.edit';
 
-        return view("backend.settings.module.list", self::$data);
+        return view("backend.common.list", self::$data);
     }
 
     /**
@@ -52,12 +51,12 @@ class ModuleController extends BackendController {
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.module');
+        self::$data['heading'] = __('messages.about_us');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.setting.module.list');
-        self::$data['requestUrl'] = route('admin.setting.module.store');
+        self::$data['backUrl'] = route('admin.about_us.list');
+        self::$data['requestUrl'] = route('admin.about_us.store');
         self::$data['requestMethod'] = 'POST';
-        return view("backend.settings.module.create", self::$data);
+        return view("backend.about_us.form", self::$data);
     }
 
     /**
@@ -66,12 +65,12 @@ class ModuleController extends BackendController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ModuleRequest $request)
+    public function store(AboutUsRequest $request)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->store($validated);
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
+            $this->aboutUsService->store($validated, $request);
+            return redirect()->route("admin.about_us.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -97,14 +96,14 @@ class ModuleController extends BackendController {
     public function edit($id)
     {
         try {
-            self::$data['module'] = $this->moduleService->getModuleById($id);
+            self::$data['aboutUs'] = $this->aboutUsService->getById($id);
             self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
-            self::$data['backUrl'] = route('admin.setting.module.list');
+            self::$data['requestUrl'] = route('admin.about_us.update', ['id' => self::$data['aboutUs']->id]);
+            self::$data['backUrl'] = route('admin.about_us.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
-            return view("backend.settings.module.create", self::$data);
+            return view("backend.about_us.form", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -117,13 +116,13 @@ class ModuleController extends BackendController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ModuleRequest $request, $id)
+    public function update(AboutUsRequest $request, $id)
     {
         try {
             $validated = $request->validated();
-            $this->moduleService->update($validated, $id);
+            $this->aboutUsService->update($validated, $request, $id);
 
-            return redirect()->route("admin.setting.module.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.about_us.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -138,13 +137,13 @@ class ModuleController extends BackendController {
     public function destroy($id)
     {
         try {
-            $this->moduleService->destroy($id);
+            $this->aboutUsService->destroy($id);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Module']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.setting.module.list")
+                'redirectUrl' => route("admin.about_us.list")
             ];
         } catch (Exception $e) {
             $response = [

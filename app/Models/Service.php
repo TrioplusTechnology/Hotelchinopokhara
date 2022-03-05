@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class Service extends Model
 {
     use HasFactory;
 
@@ -16,10 +15,12 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'description',
-        'code',
+        'title',
+        'image',
+        'slug',
         'status',
+        'order',
+        'description',
         'created_by',
         'updated_by',
         'created_at',
@@ -32,8 +33,6 @@ class Module extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'created_by',
-        'updated_by',
         'created_at',
         'updated_at'
     ];

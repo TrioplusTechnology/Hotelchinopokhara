@@ -38,7 +38,7 @@ class ModuleService
      */
     public function getAllModule()
     {
-        return $this->moduleRepository->getAllMOdule();
+        return $this->moduleRepository->getAllModule();
     }
 
     public function getModuleById($id)

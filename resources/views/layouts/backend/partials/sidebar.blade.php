@@ -84,6 +84,33 @@
             </p>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.about_us.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              About us
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.recreation.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Recreation
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.service.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Services
+            </p>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

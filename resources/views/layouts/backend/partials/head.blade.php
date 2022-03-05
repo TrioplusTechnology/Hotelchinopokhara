@@ -24,3 +24,5 @@
 <link rel="stylesheet" href="{{ asset('css/backend/plugins/summernote/summernote-bs4.min.css') }}">
 <!-- Notification toastr -->
 <link rel="stylesheet" href="{{ asset('css/backend/plugins/toastr/toastr.min.css') }}">
+<!-- dropzonejs -->
+<link rel="stylesheet" href="{{ asset('css/backend/plugins/dropzone/min/dropzone.min.css') }}" />
