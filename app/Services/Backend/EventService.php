@@ -2,6 +2,7 @@
 
 namespace App\Services\Backend;
 
+use App\Repositories\Backend\EventImageRepository;
 use App\Repositories\Backend\EventRepository;
 use Exception;
 
@@ -14,11 +15,17 @@ class EventService
     protected $eventRepository;
 
     /**
+     * @var $registrationRepository
+     */
+    protected $eventImageRepository;
+
+    /**
      * Constructor
      */
-    public function __construct(EventRepository $eventRepository)
+    public function __construct(EventRepository $eventRepository, EventImageRepository $eventImageRepository)
     {
         $this->eventRepository = $eventRepository;
+        $this->eventImageRepository = $eventImageRepository;
     }
 
     /**
@@ -86,21 +93,35 @@ class EventService
 
     public function storeFile($request)
     {
-        $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
-        $filePath = $request->file('image')->storeAs('uploads/events', $fileName, 'public');
+        $files = $request->file('image');
+        $dataToInsert = [];
+        foreach ($files as $file) {
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/events', $fileName, 'public');
 
-        $dataToInsert = [
-            'event_id' => $request->id,
-            'font_show' => false,
-            'file_path' => $filePath
-        ];
+            array_push($dataToInsert, [
+                'event_id' => $request->id,
+                'front_show' => false,
+                'file_path' => $filePath,
+                'created_by' => auth()->user()->id,
+                'updated_by' => auth()->user()->id,
+                'created_at' => \Carbon\Carbon::now()->toDateTimeString(),
+                'updated_at' => \Carbon\Carbon::now()->toDateTimeString(),
+            ]);
+        }
 
-        $result = $this->eventRepository->storeFile($dataToInsert);
+        $result = $this->eventImageRepository->storeFile($dataToInsert);
 
         if (!$result) {
             throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'image']), 422);
         }
 
         return $result;
+    }
+
+    public function getEventImages($id)
+    {
+        $where = ["event_id" => $id];
+        return $this->eventImageRepository->findAllWhere($where);
     }
 }

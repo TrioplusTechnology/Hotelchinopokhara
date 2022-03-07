@@ -27,7 +27,7 @@ class EventRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string'],
-            'slug' => ['required', 'string', Rule::unique('about_us', 'code')->ignore($request->id)],
+            'slug' => ['required', 'string', Rule::unique('events', 'slug')->ignore($request->id)],
             'status' => ['required', 'boolean'],
             'description' => ['required', 'string'],
             'order' => ['required', 'numeric'],

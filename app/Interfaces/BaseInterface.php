@@ -13,4 +13,6 @@ interface BaseInterface
     public function update(array $data, $id);
 
     public function destroy($id);
+
+    public function findAllWhere(array $data);
 }

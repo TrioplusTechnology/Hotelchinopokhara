@@ -69,23 +69,17 @@ class EventController extends BackendController
     public function store(EventRequest $request)
     {
         try {
-            if (!$request->isAjax()) {
+            if (!$request->ajax()) {
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
-
-            if ($request->hasFile('file')) {
-                $this->eventService->storeFile($request);
-                $module = 'event image';
-            } else {
-                $validated = $request->validated();
-                $this->eventService->store($validated);
-                $module = 'event';
-            }
+            $validated = $request->validated();
+            $result = $this->eventService->store($validated);
 
             $response = [
                 'status' => 'success',
                 'code' => 200,
-                'message' => __('messages.success.save', ['RECORD' => $module])
+                'message' => __('messages.success.save', ['RECORD' => 'Event']),
+                'data' => $result
             ];
         } catch (Exception $e) {
             $response = [
@@ -117,9 +111,9 @@ class EventController extends BackendController
     public function edit($id)
     {
         try {
-            self::$data['events'] = $this->eventService->getById($id);
+            self::$data['event'] = $this->eventService->getById($id);
             self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.event.update', ['id' => self::$data['events']->id]);
+            self::$data['requestUrl'] = route('admin.event.update', ['id' => self::$data['event']->id]);
             self::$data['backUrl'] = route('admin.event.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
@@ -175,5 +169,60 @@ class EventController extends BackendController
         }
 
         return response()->json($response, $response['code']);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeFile(Request $request)
+    {
+        try {
+            if (!$request->ajax()) {
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
+            }
+
+            $this->eventService->storeFile($request);
+
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.save', ['RECORD' => 'Images'])
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
+
+    public function getEventImages($id)
+    {
+        try {
+            if (!request()->ajax()) {
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
+            }
+
+            $result = $this->eventService->getEventImages($id);
+
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.get', ['RECORD' => 'Images']),
+                'data' => $result
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
+        }
+        return response()->json($response);
     }
 }

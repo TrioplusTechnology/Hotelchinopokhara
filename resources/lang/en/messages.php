@@ -76,6 +76,7 @@ return [
     'save' => ':RECORD saved successfuly.',
     'update' => ':RECORD updated successfully.',
     'delete' => ':RECORD deleted successfully.',
+    'get' => ':RECORD fetched successfully.'
   ]
 
 ];

@@ -30,7 +30,7 @@
 
             <form action="{{ $requestUrl }}" name="demoForm" id="demoForm" method="POST" enctype="multipart/form-data">
                 @csrf
-                @if(isset($aboutUs))
+                @if(isset($event))
                 <input type="hidden" name="_method" value="PUT">
                 @endif
                 <div class="card-body">
@@ -38,14 +38,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="title">{{ __('messages.title') }}</label>
-                                <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="{{ __('messages.title') }}" value="{{ old('title', isset($aboutUs) ? $aboutUs->title : '' ) }}">
+                                <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="{{ __('messages.title') }}" value="{{ old('title', isset($event) ? $event->title : '' ) }}">
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="slug">{{ __('messages.slug') }}</label>
-                                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" id="slug" placeholder="{{ __('messages.slug') }}" value="{{ old('slug', isset($aboutUs) ? $aboutUs->slug : '') }}">
+                                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" id="slug" placeholder="{{ __('messages.slug') }}" value="{{ old('slug', isset($event) ? $event->slug : '') }}">
                             </div>
                         </div>
 
@@ -53,8 +53,8 @@
                             <div class="form-group">
                                 <label for="status">{{ __('messages.status') }}</label>
                                 <select name="status" class="form-control @error('status') is-invalid @enderror" id="module_status">
-                                    <option value="1" {{ (old('status', (isset($aboutUs) ? $aboutUs->status : '')) == 1) ? 'selected' : '' }}>True</option>
-                                    <option value="0" {{ (old('status', (isset($aboutUs) ? $aboutUs->status : '')) == 0) ? 'selected' : '' }}>False</option>
+                                    <option value="1" {{ (old('status', (isset($event) ? $event->status : '')) == 1) ? 'selected' : '' }}>True</option>
+                                    <option value="0" {{ (old('status', (isset($event) ? $event->status : '')) == 0) ? 'selected' : '' }}>False</option>
                                 </select>
                             </div>
                         </div>
@@ -62,14 +62,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="order">{{ __('messages.order') }}</label>
-                                <input type="number" name="order" class="form-control @error('order') is-invalid @enderror" id="order" placeholder="{{ __('messages.order') }}" value="{{ old('order', isset($aboutUs) ? $aboutUs->order : '') }}">
+                                <input type="number" name="order" class="form-control @error('order') is-invalid @enderror" id="order" placeholder="{{ __('messages.order') }}" value="{{ old('order', isset($event) ? $event->order : '') }}">
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">{{ __('messages.description') }}</label>
-                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="summernote" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($aboutUs) ? $aboutUs->description : '' ) }}</textarea>
+                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="summernote" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($event) ? $event->description : '' ) }}</textarea>
                             </div>
                         </div>
 
@@ -104,8 +104,8 @@
     $(document).ready(function() {
         $("div#dropzoneDragArea").dropzone({
             paramName: "image",
-            url: "{{ route('admin.event.create') }}",
-            method: "put",
+            url: "{{ route('admin.event.store_file') }}",
+            method: "post",
             // previewsContainer: document.getElementById('#template'),
             addRemoveLinks: true,
             autoProcessQueue: false,
@@ -118,7 +118,13 @@
             },
             // The setting up of the dropzone
             init: function() {
-                var myDropzone = this;
+                let myDropzone = this;
+
+                <?php if (isset($event)) : ?>
+                    let event_id = "{{ $event->id }}";
+                    getEventImages(event_id, myDropzone);
+                <?php endif; ?>
+
                 //form submission code goes here
                 $(document).off("submit", "#demoForm").on("submit", "#demoForm", function(event) {
                     event.preventDefault();
@@ -131,6 +137,7 @@
                         data: formData,
                         success: function(result) {
                             if (result.status == "success") {
+                                $("input[name=id]").val(result.data.id);
                                 //process the queue
                                 myDropzone.processQueue();
                             } else {
@@ -195,6 +202,30 @@
             }
         });
     })
+
+    getEventImages = (id, myDropzone) => {
+        let url = "{{ route('admin.event.image', ':id')}}";
+        url = url.replace(':id', id);
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(resp) {
+                $.each(resp.data, function(key, value) {
+                    console.log({
+                        value
+                    });
+                    var mockFile = {
+                        name: value.file_path,
+                        size: 1204
+                    };
+
+                    myDropzone.options.addedfile.call(myDropzone, mockFile);
+                    myDropzone.options.thumbnail.call(myDropzone, mockFile, "{{ asset('storage') }}" + "/" + value.file_path);
+
+                });
+            }
+        })
+    }
 </script>
 
 @endsection

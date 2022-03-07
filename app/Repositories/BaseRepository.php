@@ -53,4 +53,9 @@ abstract class BaseRepository implements BaseInterface
 
         return $result;
     }
+
+    public function findAllWhere($data)
+    {
+        return $this->model::where($data)->get();
+    }
 }

@@ -58,7 +58,9 @@ Route::group([
     Route::get('/', [EventController::class, 'index'])->name('list');
     Route::get('create', [EventController::class, 'create'])->name('create');
     Route::post('store', [EventController::class, 'store'])->name('store');
+    Route::post('store-file', [EventController::class, 'storeFile'])->name('store_file');
     Route::get('edit/{id}', [EventController::class, 'edit'])->name('edit');
+    Route::get('image/{id}', [EventController::class, 'getEventImages'])->name('image');
     Route::put('update/{id}', [EventController::class, 'update'])->name('update');
     Route::delete('destroy/{id}', [EventController::class, 'destroy'])->name('destroy');
   });
