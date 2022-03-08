@@ -134,13 +134,26 @@ class EventController extends BackendController
     public function update(EventRequest $request, $id)
     {
         try {
+            if (!$request->ajax()) {
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
+            }
             $validated = $request->validated();
-            $this->eventService->update($validated, $request, $id);
+            $result = $this->eventService->update($validated, $id);
 
-            return redirect()->route("admin.event.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.save', ['RECORD' => 'Event']),
+                'data' => $result
+            ];
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
         }
+        return response()->json($response);
     }
 
     /**
@@ -209,6 +222,31 @@ class EventController extends BackendController
             }
 
             $result = $this->eventService->getEventImages($id);
+
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.get', ['RECORD' => 'Images']),
+                'data' => $result
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
+        }
+        return response()->json($response);
+    }
+
+    public function deleteImage(Request $request, $id)
+    {
+        try {
+            if (!request()->ajax()) {
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
+            }
+
+            $result = $this->eventService->deleteImage($request, $id);
 
             $response = [
                 'status' => 'success',

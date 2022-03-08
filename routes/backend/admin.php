@@ -62,6 +62,8 @@ Route::group([
     Route::get('edit/{id}', [EventController::class, 'edit'])->name('edit');
     Route::get('image/{id}', [EventController::class, 'getEventImages'])->name('image');
     Route::put('update/{id}', [EventController::class, 'update'])->name('update');
+    Route::put('update-file', [EventController::class, 'storeFile'])->name('update_file');
     Route::delete('destroy/{id}', [EventController::class, 'destroy'])->name('destroy');
+    Route::delete('image/destroy/{id}', [EventController::class, 'deleteImage'])->name('destroy_file');
   });
 });

@@ -5,6 +5,7 @@ namespace App\Services\Backend;
 use App\Repositories\Backend\EventImageRepository;
 use App\Repositories\Backend\EventRepository;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class EventService
 {
@@ -65,17 +66,11 @@ class EventService
     /**
      * Updates about us
      */
-    public function update($data, $request, $id)
+    public function update($data, $id)
     {
-        if ($request->file('image')) {
-            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
-            $filePath = $request->file('image')->storeAs('uploads/event', $fileName, 'public');
-            $data['image'] = $filePath;
-        }
-
         $result = $this->eventRepository->update($data, $id);
 
-        if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'module']), 501);
+        if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'event']), 501);
 
         return $result;
     }
@@ -123,5 +118,13 @@ class EventService
     {
         $where = ["event_id" => $id];
         return $this->eventImageRepository->findAllWhere($where);
+    }
+
+    public function deleteImage($request, $id)
+    {
+        if (file_exists(public_path('storage/' . $request->file))) {
+            @unlink(public_path('storage/' . $request->file));
+        }
+        return $this->eventImageRepository->destroy($id);
     }
 }

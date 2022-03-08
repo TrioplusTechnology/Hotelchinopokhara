@@ -76,7 +76,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">{{ __('messages.image') }}</label>
-                                <input type="hidden" name="id" value="">
+                                <input type="hidden" name="id" value="{{ isset($event) ? $event->id : '' }}">
                                 <div id="dropzoneDragArea" class="dz-default dz-message dropzoneDragArea dropzone">
                                 </div>
                             </div>
@@ -105,7 +105,10 @@
         $("div#dropzoneDragArea").dropzone({
             paramName: "image",
             url: "{{ route('admin.event.store_file') }}",
-            method: "post",
+            method: "POST",
+            headers: {
+                'x-csrf-token': "{{ csrf_token() }}",
+            },
             // previewsContainer: document.getElementById('#template'),
             addRemoveLinks: true,
             autoProcessQueue: false,
@@ -113,9 +116,6 @@
             parallelUploads: 100,
             maxFiles: 100,
             clickable: ".dropzoneDragArea",
-            params: {
-                _token: "{{ csrf_token() }}"
-            },
             // The setting up of the dropzone
             init: function() {
                 let myDropzone = this;
@@ -132,7 +132,7 @@
                     let URL = $("#demoForm").attr('action');
                     let formData = $('#demoForm').serialize();
                     $.ajax({
-                        type: 'POST',
+                        type: "{{ isset($event) ? 'PUT' : 'POST'}}",
                         url: URL,
                         data: formData,
                         success: function(result) {
@@ -149,10 +149,12 @@
                         }
                     });
                 });
+
                 //Gets triggered when we submit the image.
                 this.on('sending', function(file, xhr, formData) {
                     let id = $("input[name=id]").val();
                     formData.append('id', id);
+                    formData.append("_token", "{{ csrf_token() }}");
                 });
 
                 this.on("success", function(file, response) {
@@ -184,19 +186,27 @@
                 });
             },
             removedfile: function(file) {
-                var name = file.name;
+                console.log(file);
+                let name = file.name;
+                let id = file.id;
+                let url = "{{ route('admin.event.destroy_file', ':id') }}";
+                url = url.replace(':id', id);
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'upload.php',
-                    data: {
-                        name: name,
-                        request: 2
-                    },
-                    sucess: function(data) {
-                        console.log('success: ' + data);
-                    }
-                });
+                <?php if (isset($event)) : ?>
+                    $.ajax({
+                        type: "POST",
+                        url,
+                        data: {
+                            '_method': 'delete',
+                            '_token': '{{ csrf_token() }}',
+                            id: file.id,
+                            file: name
+                        },
+                        sucess: function(data) {
+                            console.log('success: ' + data);
+                        }
+                    });
+                <?php endif; ?>
                 var _ref;
                 return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
             }
@@ -211,17 +221,15 @@
             url: url,
             success: function(resp) {
                 $.each(resp.data, function(key, value) {
-                    console.log({
-                        value
-                    });
                     var mockFile = {
                         name: value.file_path,
-                        size: 1204
+                        size: 1204,
+                        id: value.id
                     };
 
                     myDropzone.options.addedfile.call(myDropzone, mockFile);
                     myDropzone.options.thumbnail.call(myDropzone, mockFile, "{{ asset('storage') }}" + "/" + value.file_path);
-
+                    $(mockFile.previewElement).prop('id', value.id);
                 });
             }
         })
