@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
 
-            <form action="{{ $requestUrl }}" name="demoForm" id="demoForm" method="POST" enctype="multipart/form-data">
+            <form action="{{ $requestUrl }}" name="customForm" id="customForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($event))
                 <input type="hidden" name="_method" value="PUT">
@@ -38,21 +38,21 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="title">{{ __('messages.title') }}</label>
-                                <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" id="title" placeholder="{{ __('messages.title') }}" value="{{ old('title', isset($event) ? $event->title : '' ) }}">
+                                <input type="text" name="title" class="form-control" id="title" placeholder="{{ __('messages.title') }}" value="{{ old('title', isset($event) ? $event->title : '' ) }}">
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="slug">{{ __('messages.slug') }}</label>
-                                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" id="slug" placeholder="{{ __('messages.slug') }}" value="{{ old('slug', isset($event) ? $event->slug : '') }}">
+                                <input type="text" name="slug" class="form-control" id="slug" placeholder="{{ __('messages.slug') }}" value="{{ old('slug', isset($event) ? $event->slug : '') }}">
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="status">{{ __('messages.status') }}</label>
-                                <select name="status" class="form-control @error('status') is-invalid @enderror" id="module_status">
+                                <select name="status" class="form-control" id="status">
                                     <option value="1" {{ (old('status', (isset($event) ? $event->status : '')) == 1) ? 'selected' : '' }}>True</option>
                                     <option value="0" {{ (old('status', (isset($event) ? $event->status : '')) == 0) ? 'selected' : '' }}>False</option>
                                 </select>
@@ -62,20 +62,20 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="order">{{ __('messages.order') }}</label>
-                                <input type="number" name="order" class="form-control @error('order') is-invalid @enderror" id="order" placeholder="{{ __('messages.order') }}" value="{{ old('order', isset($event) ? $event->order : '') }}">
+                                <input type="number" name="order" class="form-control" id="order" placeholder="{{ __('messages.order') }}" value="{{ old('order', isset($event) ? $event->order : '') }}">
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">{{ __('messages.description') }}</label>
-                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="summernote" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($event) ? $event->description : '' ) }}</textarea>
+                                <textarea name="description" class="form-control summernote" id="description" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($event) ? $event->description : '' ) }}</textarea>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="description">{{ __('messages.image') }}</label>
+                                <label for="image">{{ __('messages.image') }}</label>
                                 <input type="hidden" name="id" value="{{ isset($event) ? $event->id : '' }}">
                                 <div id="dropzoneDragArea" class="dz-default dz-message dropzoneDragArea dropzone">
                                 </div>
@@ -126,15 +126,19 @@
                 <?php endif; ?>
 
                 //form submission code goes here
-                $(document).off("submit", "#demoForm").on("submit", "#demoForm", function(event) {
+                $(document).off("submit", "#customForm").on("submit", "#customForm", function(event) {
                     event.preventDefault();
 
-                    let URL = $("#demoForm").attr('action');
-                    let formData = $('#demoForm').serialize();
+                    let instance = $(this);
+                    let URL = $("#customForm").attr('action');
+                    let formData = $('#customForm').serialize();
                     $.ajax({
                         type: "{{ isset($event) ? 'PUT' : 'POST'}}",
                         url: URL,
                         data: formData,
+                        beforeSend: function() {
+                            removeValidationError();
+                        },
                         success: function(result) {
                             if (result.status == "success") {
                                 $("input[name=id]").val(result.data.id);
@@ -144,9 +148,10 @@
                                 console.log("error");
                             }
                         },
-                        error: function(result) {
-                            console.log(result);
-                        }
+                        // error: function(result) {
+                        //     console.log(result);
+                        //     showValidationMessage(instance, result.errors)
+                        // }
                     });
                 });
 
@@ -159,7 +164,7 @@
 
                 this.on("success", function(file, response) {
                     //reset the form
-                    $('#demoform')[0].reset();
+                    $('#customForm')[0].reset();
                     //reset dropzone
                     $('.dropzone-previews').empty();
                 });

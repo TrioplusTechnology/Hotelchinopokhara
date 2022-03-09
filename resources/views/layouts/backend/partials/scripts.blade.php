@@ -44,6 +44,6 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     // Summernote
-    $('#summernote').summernote()
+    $('.summernote').summernote()
   })
 </script>

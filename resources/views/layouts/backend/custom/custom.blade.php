@@ -53,4 +53,35 @@
                 }
             });
     }
+
+    showValidationMessage = (errors) => {
+
+        let form = $("#customForm");
+        let inputs = form.find('input:not(:hidden), select, checkbox, textarea, radio');
+
+        $.each(errors, (index, error) => {
+            $.each(error, (index1, element) => {
+                let errorHtml = `<span class="invalid-feedback" style="display: unset;" role="alert">${element}</span>`;
+
+                $("#" + index).after(errorHtml);
+                $("#" + index).addClass('is-invalid');
+            })
+            // $("")
+        })
+    }
+
+    removeValidationError = () => {
+        let form = $("#customForm");
+        form.find('span.invalid-feedback').remove();
+        form.find('.form-control').removeClass('is-invalid');
+    }
+
+    //setup ajax error handling
+    $.ajaxSetup({
+        error: function(resp, status, error) {
+            if (resp.status === 422) {
+                showValidationMessage(resp.responseJSON.errors)
+            }
+        }
+    });
 </script>

@@ -112,7 +112,7 @@ class EventController extends BackendController
     {
         try {
             self::$data['event'] = $this->eventService->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.events');
             self::$data['requestUrl'] = route('admin.event.update', ['id' => self::$data['event']->id]);
             self::$data['backUrl'] = route('admin.event.list');
             self::$data['requestMethod'] = 'POST';

@@ -92,8 +92,8 @@
               <div class="form-group">
                 <label for="image">{{ __('messages.image') }}</label>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="image" name="image">
-                    <label class="custom-file-label" for="customFile" id="file_name">{{ isset($aboutUs) ? $aboutUs->image : "Choose file" }}</label>
+                  <input type="file" class="custom-file-input" id="image" name="image">
+                  <label class="custom-file-label" for="customFile" id="file_name">{{ isset($aboutUs) ? $aboutUs->image : "Choose file" }}</label>
                 </div>
                 @error('image')
                 <span class="invalid-feedback" role="alert" style="display: inline;">{{ $message }}</span>
@@ -102,7 +102,7 @@
             </div>
 
             <div class="col-md-12">
-                <img id="previewImg" src="{{ isset($aboutUs) ? asset('storage/'.$aboutUs->image) : '' }}" max-width="500px">
+              <img id="previewImg" src="{{ isset($aboutUs) ? asset('storage/'.$aboutUs->image) : '' }}" max-width="500px">
             </div>
             <!-- /.form-group -->
           </div>
@@ -123,14 +123,14 @@
 
 <script>
   $(document).ready(() => {
-    $("#image").change(function () {
+    $("#image").change(function() {
       const file = this.files[0];
-      console.log(file);
+
       if (file) {
         let reader = new FileReader();
-        reader.onload = function (event) {
-            $("#previewImg")
-              .attr("src", event.target.result);
+        reader.onload = function(event) {
+          $("#previewImg")
+            .attr("src", event.target.result);
         };
         reader.readAsDataURL(file);
         $("#file_name").html("").html(file.name);
