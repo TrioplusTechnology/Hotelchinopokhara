@@ -26,3 +26,8 @@
 <link rel="stylesheet" href="{{ asset('css/backend/plugins/toastr/toastr.min.css') }}">
 <!-- dropzonejs -->
 <link rel="stylesheet" href="{{ asset('css/backend/plugins/dropzone/min/dropzone.min.css') }}" />
+<!-- Select2 -->
+<link rel="stylesheet" href="{{ asset('css/backend/plugins/select2/css/select2.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/backend/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" />
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="{{ asset('css/backend/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" />

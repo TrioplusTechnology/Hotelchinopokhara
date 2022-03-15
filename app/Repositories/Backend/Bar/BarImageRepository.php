@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Backend;
+namespace App\Repositories\Backend\Bar;
 
-use App\Models\EventImage;
+use App\Models\Bar\BarImage;
 use App\Repositories\BaseRepository;
 
-class EventImageRepository extends BaseRepository
+class BarImageRepository extends BaseRepository
 {
     /**
      * @var model
@@ -15,7 +15,7 @@ class EventImageRepository extends BaseRepository
     /**
      * Constructor
      */
-    public function __construct(EventImage $model)
+    public function __construct(BarImage $model)
     {
         parent::__construct($model);
     }

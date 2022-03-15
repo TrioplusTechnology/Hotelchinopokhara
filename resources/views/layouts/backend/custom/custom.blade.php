@@ -66,7 +66,6 @@
                 $("#" + index).after(errorHtml);
                 $("#" + index).addClass('is-invalid');
             })
-            // $("")
         })
     }
 

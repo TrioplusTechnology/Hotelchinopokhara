@@ -30,7 +30,7 @@ class AlterNameUsernameMiddleNameUserTable extends Migration
         Schema::table('users', function ($table) {
             $table->string('name');
             $table->string('username');
-            $table->integer('middle_name')->nullable(false)->change();
+            $table->string('middle_name')->nullable(false)->change();
         });
     }
 }

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Backend;
+namespace App\Repositories\Backend\Gallery;
 
-use App\Models\Event;
+use App\Models\Gallery\Gallery;
 use App\Repositories\BaseRepository;
 
-class EventRepository extends BaseRepository
+class GalleryRepository extends BaseRepository
 {
     /**
      * @var model
@@ -15,7 +15,7 @@ class EventRepository extends BaseRepository
     /**
      * Constructor
      */
-    public function __construct(Event $model)
+    public function __construct(Gallery $model)
     {
         parent::__construct($model);
     }

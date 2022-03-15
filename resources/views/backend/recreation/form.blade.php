@@ -71,7 +71,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="description">{{ __('messages.description') }}</label>
-                                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="summernote" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($aboutUs) ? $aboutUs->description : '' ) }}</textarea>
+                                <textarea name="description" class="form-control summernote @error('description') is-invalid @enderror" id="description" rows="3" placeholder="{{ __('messages.description') }}">{{ old('description', isset($aboutUs) ? $aboutUs->description : '' ) }}</textarea>
                                 @error('description')
                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                 @enderror

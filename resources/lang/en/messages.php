@@ -60,6 +60,10 @@ return [
   'services' => 'Services',
   'slug' => 'Slug',
   'events' => 'Event',
+  'bars' => 'Bar',
+  'gallery' => 'Gallery',
+  'room' => 'Room',
+  'room_feature' => 'Room Feature',
 
   /**
    * Error messages

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Gallery;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Event extends Model
+class Gallery extends Model
 {
     use HasFactory;
 
@@ -14,7 +14,7 @@ class Event extends Model
      *
      * @var string
      */
-    protected $table = 'events';
+    protected $table = 'galleries';
 
     /**
      * The attributes that are mass assignable.
@@ -51,4 +51,12 @@ class Event extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    /**
+     * Bar Images
+     */
+    public function images()
+    {
+        return $this->hasMany(GalleryImage::class, 'gallery_id');
+    }
 }

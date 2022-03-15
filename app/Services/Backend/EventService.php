@@ -2,8 +2,8 @@
 
 namespace App\Services\Backend;
 
-use App\Repositories\Backend\EventImageRepository;
-use App\Repositories\Backend\EventRepository;
+use App\Repositories\Backend\Event\EventImageRepository;
+use App\Repositories\Backend\Event\EventRepository;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 

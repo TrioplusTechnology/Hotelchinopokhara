@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\Backend\AboutUsController;
+use App\Http\Controllers\Backend\BarController;
 use App\Http\Controllers\Backend\DashboardContorller;
 use App\Http\Controllers\Backend\EventController;
+use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\RecreationController;
+use App\Http\Controllers\Backend\Room\RoomController;
+use App\Http\Controllers\Backend\Room\RoomFeatureController;
 use App\Http\Controllers\Backend\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,5 +69,65 @@ Route::group([
     Route::put('update-file', [EventController::class, 'storeFile'])->name('update_file');
     Route::delete('destroy/{id}', [EventController::class, 'destroy'])->name('destroy');
     Route::delete('image/destroy/{id}', [EventController::class, 'deleteImage'])->name('destroy_file');
+  });
+
+  Route::group([
+    'prefix' => 'bar',
+    'as' => 'bar.'
+  ], function () {
+    Route::get('/', [BarController::class, 'index'])->name('list');
+    Route::get('create', [BarController::class, 'create'])->name('create');
+    Route::post('store', [BarController::class, 'store'])->name('store');
+    Route::post('store-file', [BarController::class, 'storeFile'])->name('store_file');
+    Route::get('edit/{id}', [BarController::class, 'edit'])->name('edit');
+    Route::get('image/{id}', [BarController::class, 'getBarImages'])->name('image');
+    Route::put('update/{id}', [BarController::class, 'update'])->name('update');
+    Route::put('update-file', [BarController::class, 'storeFile'])->name('update_file');
+    Route::delete('destroy/{id}', [BarController::class, 'destroy'])->name('destroy');
+    Route::delete('image/destroy/{id}', [BarController::class, 'deleteImage'])->name('destroy_file');
+  });
+
+  Route::group([
+    'prefix' => 'gallery',
+    'as' => 'gallery.'
+  ], function () {
+    Route::get('/', [GalleryController::class, 'index'])->name('list');
+    Route::get('create', [GalleryController::class, 'create'])->name('create');
+    Route::post('store', [GalleryController::class, 'store'])->name('store');
+    Route::post('store-file', [GalleryController::class, 'storeFile'])->name('store_file');
+    Route::get('edit/{id}', [GalleryController::class, 'edit'])->name('edit');
+    Route::get('image/{id}', [GalleryController::class, 'getGalleryImages'])->name('image');
+    Route::put('update/{id}', [GalleryController::class, 'update'])->name('update');
+    Route::put('update-file', [GalleryController::class, 'storeFile'])->name('update_file');
+    Route::delete('destroy/{id}', [GalleryController::class, 'destroy'])->name('destroy');
+    Route::delete('image/destroy/{id}', [GalleryController::class, 'deleteImage'])->name('destroy_file');
+  });
+
+  Route::group([
+    'prefix' => 'room',
+    'as' => 'room.'
+  ], function () {
+    Route::get('/', [RoomController::class, 'index'])->name('list');
+    Route::get('create', [RoomController::class, 'create'])->name('create');
+    Route::post('store', [RoomController::class, 'store'])->name('store');
+    Route::post('store-file', [RoomController::class, 'storeFile'])->name('store_file');
+    Route::get('edit/{id}', [RoomController::class, 'edit'])->name('edit');
+    Route::get('image/{id}', [RoomController::class, 'getRoomImages'])->name('image');
+    Route::put('update/{id}', [RoomController::class, 'update'])->name('update');
+    Route::put('update-file', [RoomController::class, 'storeFile'])->name('update_file');
+    Route::delete('destroy/{id}', [RoomController::class, 'destroy'])->name('destroy');
+    Route::delete('image/destroy/{id}', [RoomController::class, 'deleteImage'])->name('destroy_file');
+
+    Route::group([
+      'prefix' => 'feature',
+      'as' => 'feature.'
+    ], function () {
+      Route::get('/', [RoomFeatureController::class, 'index'])->name('list');
+      Route::get('create', [RoomFeatureController::class, 'create'])->name('create');
+      Route::post('store', [RoomFeatureController::class, 'store'])->name('store');
+      Route::get('edit/{id}', [RoomFeatureController::class, 'edit'])->name('edit');
+      Route::put('update/{id}', [RoomFeatureController::class, 'update'])->name('update');
+      Route::delete('destroy/{id}', [RoomFeatureController::class, 'destroy'])->name('destroy');
+    });
   });
 });
