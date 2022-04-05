@@ -52,4 +52,13 @@ class ModuleRepository
 
         return $result;
     }
+
+    /**
+     * Maps module and permission
+     */
+    public function storeModulePermissionMapping($permission, $moduleId)
+    {
+        $module = $this->module->find($moduleId);
+        return $module->permissions()->sync($permission);
+    }
 }

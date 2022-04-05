@@ -22,7 +22,12 @@ Route::group([
       'prefix' => 'role',
       'as' => 'role.'
     ], function () {
+      Route::get('/', [RoleController::class, 'index'])->name('list');
       Route::get('create', [RoleController::class, 'create'])->name('create');
+      Route::post('store', [RoleController::class, 'store'])->name('store');
+      Route::get('edit/{id}', [RoleController::class, 'edit'])->name('edit');
+      Route::put('update/{id}', [RoleController::class, 'update'])->name('update');
+      Route::delete('destroy/{id}', [RoleController::class, 'destroy'])->name('destroy');
     });
 
     //Permission routes
@@ -30,7 +35,12 @@ Route::group([
       'prefix' => 'permission',
       'as' => 'permission.'
     ], function () {
+      Route::get('/', [PermissionController::class, 'index'])->name('list');
       Route::get('create', [PermissionController::class, 'create'])->name('create');
+      Route::post('store', [PermissionController::class, 'store'])->name('store');
+      Route::get('edit/{id}', [PermissionController::class, 'edit'])->name('edit');
+      Route::put('update/{id}', [PermissionController::class, 'update'])->name('update');
+      Route::delete('destroy/{id}', [PermissionController::class, 'destroy'])->name('destroy');
     });
 
     //Module routes

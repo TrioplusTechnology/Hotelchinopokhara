@@ -61,6 +61,21 @@
             </div>
             <!-- /.form-group -->
           </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group clearfix">
+                <label class="label-block" for="module_description">{{ __('messages.permission') }}</label>
+                @foreach($permissions as $key => $permission)
+                <div class="icheck-primary d-inline">
+                  <input type="checkbox" id="permission{{$key}}" name="permission[]" value="{{ $permission->id }}" {{ isset($module) && in_array($permission->id, $permissionArray) ? "checked" : "" }}>
+                  <label for="permission{{$key}}">
+                    {{ $permission->name }}
+                  </label>
+                </div>
+                @endforeach
+              </div>
+            </div>
+          </div>
         </div>
         <!-- /.row -->
         <!-- /.card-body -->

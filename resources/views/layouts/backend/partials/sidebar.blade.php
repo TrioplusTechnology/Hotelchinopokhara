@@ -111,6 +111,42 @@
             </p>
           </a>
         </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.bar.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Bar
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.event.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Event
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.gallery.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Gallery
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{ route('admin.room.list') }}" class="nav-link">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p>
+              Room
+            </p>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

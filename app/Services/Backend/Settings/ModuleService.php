@@ -26,9 +26,17 @@ class ModuleService
      */
     public function store($request)
     {
+        if (isset($request["permission"])) {
+            $permission = $request["permission"];
+        }
+
         $result = $this->moduleRepository->store($request);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'user']), 501);
+
+        if (isset($permission)) {
+            $this->moduleRepository->storeModulePermissionMapping($permission, $result->id);
+        }
 
         return $result;
     }
@@ -54,9 +62,17 @@ class ModuleService
 
     public function update($request, $id)
     {
+        if (isset($request["permission"])) {
+            $permission = $request["permission"];
+            unset($request["permission"]);
+        }
+
         $result = $this->moduleRepository->update($request, $id);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'module']), 501);
+        if (isset($permission)) {
+            $this->moduleRepository->storeModulePermissionMapping($permission, $id);
+        }
 
         return $result;
     }

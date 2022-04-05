@@ -20,9 +20,9 @@
                         <tr>
                             <th>S.N.</th>
                             @foreach($keys as $key => $data)
-                                @if(!in_array($data, ['id', 'created_by', 'updated_by']))
-                                <th>{{ ucfirst($data) }}</th>
-                                @endif
+                            @if(!in_array($data, ['id', 'created_by', 'updated_by']))
+                            <th>{{ ucfirst($data) }}</th>
+                            @endif
                             @endforeach
                             <th>Action</th>
                         </tr>
@@ -32,15 +32,19 @@
                         <tr>
                             <td>{{ ++$key }}</td>
                             @foreach($list->toArray() as $key1 => $value)
-                                @if(!in_array($key1, ['id', 'created_by', 'updated_by']))
-                                    @if($key1 === 'status')
-                                    <td><span class="badge badge-{{ $value ? 'success' : 'warning' }}">{{ $value ? 'Active' : 'Inactive' }}</span></td>
-                                    @elseif($key1 === 'image')
-                                    <td><img src="{{ asset('storage/'.$value) }}" style="max-width:80px; max-height:80px;"></td>
-                                    @else
-                                    <td>{{ $value }}</td>
-                                    @endif
-                                @endif
+                            @if(!in_array($key1, ['id', 'created_by', 'updated_by']))
+                            @if($key1 === 'status')
+                            <td><span class="badge badge-{{ $value ? 'success' : 'warning' }}">{{ $value ? 'Active' : 'Inactive' }}</span></td>
+                            @elseif($key1 === 'image')
+                            <td><img src="{{ asset('storage/'.$value) }}" style="max-width:80px; max-height:80px;"></td>
+                            @elseif($key1 === 'description')
+                            <td>
+                                {{ substr_replace($value, "....", 40) }}
+                            </td>
+                            @else
+                            <td>{{ $value }}</td>
+                            @endif
+                            @endif
                             @endforeach
                             <td>
                                 <a href="{{ route($editUrl, ['id' => $list->id]) }}" class="btn btn-sm btn-success btn-flat" data-toggle="tooltip" data-placement="top" title="{{ __('messages.edit') }}"><i class="fa fa-edit"></i></a>&nbsp;

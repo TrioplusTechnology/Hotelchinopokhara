@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Backend\Settings;
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Requests\Backend\Settings\ModuleRequest;
 use App\Services\Backend\Settings\ModuleService;
+use App\Services\Backend\Settings\PermissionService;
 use App\Traits\CommonTrait;
 use Exception;
 use Illuminate\Http\Request;
 
-class ModuleController extends BackendController {
+class ModuleController extends BackendController
+{
 
     /**
      * Common traits
@@ -22,13 +24,19 @@ class ModuleController extends BackendController {
     private $moduleService;
 
     /**
+     * Permission service
+     */
+    private $permissionService;
+
+    /**
      * Constructor
      */
-    public function __construct(ModuleService $moduleService)
+    public function __construct(ModuleService $moduleService, PermissionService $permissionService)
     {
         parent::__construct();
 
         $this->moduleService = $moduleService;
+        $this->permissionService = $permissionService;
     }
 
     /**
@@ -57,6 +65,8 @@ class ModuleController extends BackendController {
         self::$data['backUrl'] = route('admin.setting.module.list');
         self::$data['requestUrl'] = route('admin.setting.module.store');
         self::$data['requestMethod'] = 'POST';
+        self::$data['permissions'] = $this->permissionService->getAll();
+
         return view("backend.settings.module.create", self::$data);
     }
 
@@ -97,7 +107,9 @@ class ModuleController extends BackendController {
     public function edit($id)
     {
         try {
-            self::$data['module'] = $this->moduleService->getModuleById($id);
+            self::$data['module'] = $modules = $this->moduleService->getModuleById($id);
+            self::$data['permissionArray'] = $this->getAllPermissionInArray($modules);
+            self::$data['permissions'] = $this->permissionService->getAll();
             self::$data['heading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
             self::$data['backUrl'] = route('admin.setting.module.list');
@@ -155,5 +167,19 @@ class ModuleController extends BackendController {
         }
 
         return response()->json($response, $response['code']);
+    }
+
+    public function getAllPermissionInArray($modules)
+    {
+        $permissionStack = [];
+        if ($modules->permissions->isEmpty()) {
+            return $permissionStack;
+        }
+
+        foreach ($modules->permissions as $permission) {
+            array_push($permissionStack, $permission->id);
+        }
+
+        return $permissionStack;
     }
 }

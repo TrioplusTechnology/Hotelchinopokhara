@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Module extends Model
+class Permission extends Model
 {
     use HasFactory;
 
@@ -46,10 +45,10 @@ class Module extends Model
     protected $casts = [];
 
     /**
-     * The permissions that belong to the user.
+     * The modules that belong to the role.
      */
-    public function permissions()
+    public function modules()
     {
-        return $this->belongsToMany(Permission::class, "module_permission", "module_id", "permission_id");
+        return $this->belongsToMany(Module::class, "module_permission", "permission_id", "module_id");
     }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Requests\Backend\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-class ModuleRequest extends FormRequest
+class PermissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,7 +30,6 @@ class ModuleRequest extends FormRequest
             'code' => ['required', 'string', Rule::unique('modules', 'code')->ignore($request->id)],
             'status' => ['required', 'boolean'],
             'description' => ['required', 'string'],
-            'permission' => ['array']
         ];
     }
 }
