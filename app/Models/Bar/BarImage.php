@@ -2,12 +2,14 @@
 
 namespace App\Models\Bar;
 
+use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BarImage extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The table associated with the model.

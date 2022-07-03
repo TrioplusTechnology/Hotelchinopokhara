@@ -64,6 +64,9 @@ return [
   'gallery' => 'Gallery',
   'room' => 'Room',
   'room_feature' => 'Room Feature',
+  'role_module_permission_mapping' => 'Role Module Permission Mapping',
+  'booking' => 'Booking',
+  'type' => 'Type',
 
   /**
    * Error messages
@@ -73,7 +76,8 @@ return [
     'failed_to_update' => 'Unbale to update :RECORD',
     'failed_to_delete' => 'Unbale to delete :RECORD',
     'not_found' => ':RECORD not found.',
-    'direct_script_not_allowed' => 'Direct script access not allowed!'
+    'direct_script_not_allowed' => 'Direct script access not allowed!',
+    'bad_request' => 'Bad Request'
   ],
 
   'success' => [

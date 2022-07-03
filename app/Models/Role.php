@@ -6,9 +6,10 @@ use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recreation extends Model
+class Role extends Model
 {
-    use HasFactory, CreatedUpdatedTrait;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -16,12 +17,10 @@ class Recreation extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
-        'image',
-        'slug',
-        'status',
-        'order',
+        'name',
         'description',
+        'code',
+        'status',
         'created_by',
         'updated_by',
         'created_at',
@@ -34,6 +33,8 @@ class Recreation extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'created_by',
+        'updated_by',
         'created_at',
         'updated_at'
     ];
@@ -44,4 +45,20 @@ class Recreation extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    /**
+     * The permissions that belong to the user.
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, "module_permission_role", "role_id", "permission_id");
+    }
+
+    /**
+     * The permissions that belong to the user.
+     */
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, "module_permission_role", "role_id", "module_id");
+    }
 }

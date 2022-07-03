@@ -1,14 +1,22 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Room;
 
 use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recreation extends Model
+class RoomType extends Model
 {
-    use HasFactory, CreatedUpdatedTrait;
+    use HasFactory,
+        CreatedUpdatedTrait;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'room_type';
 
     /**
      * The attributes that are mass assignable.
@@ -17,11 +25,10 @@ class Recreation extends Model
      */
     protected $fillable = [
         'title',
-        'image',
         'slug',
-        'status',
-        'order',
         'description',
+        'order',
+        'status',
         'created_by',
         'updated_by',
         'created_at',
@@ -34,6 +41,8 @@ class Recreation extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'created_by',
+        'updated_by',
         'created_at',
         'updated_at'
     ];
@@ -44,4 +53,17 @@ class Recreation extends Model
      * @var array<string, string>
      */
     protected $casts = [];
+
+    /**
+     * Get the post that owns the mapping.
+     */
+    public function features()
+    {
+        return $this->belongsToMany(RoomFeature::class, 'room_feature_mappings', 'room_id', 'room_feature_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(RoomImage::class, 'room_id');
+    }
 }

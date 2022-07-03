@@ -123,7 +123,7 @@
     $(document).ready(function() {
         $("div#dropzoneDragArea").dropzone({
             paramName: "image",
-            url: "{{ route('admin.room.store_file') }}",
+            url: "{{ route('admin.roomtype.store_file') }}",
             method: "POST",
             headers: {
                 'x-csrf-token': "{{ csrf_token() }}",
@@ -212,7 +212,7 @@
             removedfile: function(file) {
                 let name = file.name;
                 let id = file.id;
-                let url = "{{ route('admin.room.destroy_file', ':id') }}";
+                let url = "{{ route('admin.roomtype.destroy_file', ':id') }}";
                 url = url.replace(':id', id);
 
                 <?php if (isset($room)) : ?>
@@ -237,7 +237,7 @@
     })
 
     getRoomImages = (id, myDropzone) => {
-        let url = "{{ route('admin.room.image', ':id')}}";
+        let url = "{{ route('admin.roomtype.image', ':id')}}";
         url = url.replace(':id', id);
         $.ajax({
             type: "GET",

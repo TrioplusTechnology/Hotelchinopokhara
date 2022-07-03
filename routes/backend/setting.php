@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\Settings\ModuleController;
 use App\Http\Controllers\Backend\Settings\PermissionController;
 use App\Http\Controllers\Backend\Settings\RoleController;
+use App\Http\Controllers\Backend\Settings\RoleModulePermissionMappingController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -54,6 +55,20 @@ Route::group([
       Route::get('edit/{id}', [ModuleController::class, 'edit'])->name('edit');
       Route::put('update/{id}', [ModuleController::class, 'update'])->name('update');
       Route::delete('destroy/{id}', [ModuleController::class, 'destroy'])->name('destroy');
+    });
+
+    //Module routes
+    Route::group([
+      'prefix' => 'mapping',
+      'as' => 'mapping.'
+    ], function () {
+      Route::get('/', [RoleModulePermissionMappingController::class, 'index'])->name('list');
+      Route::get('create', [RoleModulePermissionMappingController::class, 'create'])->name('create');
+      Route::post('store', [RoleModulePermissionMappingController::class, 'store'])->name('store');
+      Route::get('edit/{id}', [RoleModulePermissionMappingController::class, 'edit'])->name('edit');
+      Route::put('update/{id}', [RoleModulePermissionMappingController::class, 'update'])->name('update');
+      Route::delete('destroy/{id}', [RoleModulePermissionMappingController::class, 'destroy'])->name('destroy');
+      Route::post('get-permission-by-module', [RoleModulePermissionMappingController::class, 'getPermissionByModule'])->name('get-permission-by-module');
     });
   });
 });

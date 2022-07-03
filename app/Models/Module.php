@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Module extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +52,13 @@ class Module extends Model
     public function permissions()
     {
         return $this->belongsToMany(Permission::class, "module_permission", "module_id", "permission_id");
+    }
+
+    /**
+     * The permissions that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, "module_permission_role", "module_id", "role_id");
     }
 }

@@ -48,7 +48,7 @@ class ModuleController extends BackendController
     {
         self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
         self::$data['addUrl']  = route('admin.setting.module.create');
-        self::$data['modules'] = $lists = $this->moduleService->getAllModule();
+        self::$data['modules'] = $this->moduleService->getAllModule();
 
         return view("backend.settings.module.list", self::$data);
     }

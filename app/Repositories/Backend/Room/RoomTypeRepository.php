@@ -2,10 +2,10 @@
 
 namespace App\Repositories\Backend\Room;
 
-use App\Models\Room\Room;
+use App\Models\Room\RoomType;
 use App\Repositories\BaseRepository;
 
-class RoomRepository extends BaseRepository
+class RoomTypeRepository extends BaseRepository
 {
     /**
      * @var model
@@ -15,7 +15,7 @@ class RoomRepository extends BaseRepository
     /**
      * Constructor
      */
-    public function __construct(Room $model)
+    public function __construct(RoomType $model)
     {
         parent::__construct($model);
     }

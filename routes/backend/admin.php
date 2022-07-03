@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\Backend\AboutUsController;
 use App\Http\Controllers\Backend\BarController;
+use App\Http\Controllers\Backend\BookingController;
 use App\Http\Controllers\Backend\DashboardContorller;
 use App\Http\Controllers\Backend\EventController;
 use App\Http\Controllers\Backend\GalleryController;
 use App\Http\Controllers\Backend\RecreationController;
-use App\Http\Controllers\Backend\Room\RoomController;
 use App\Http\Controllers\Backend\Room\RoomFeatureController;
+use App\Http\Controllers\Backend\Room\RoomTypeController;
 use App\Http\Controllers\Backend\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -104,19 +105,19 @@ Route::group([
   });
 
   Route::group([
-    'prefix' => 'room',
-    'as' => 'room.'
+    'prefix' => 'roomtype',
+    'as' => 'roomtype.'
   ], function () {
-    Route::get('/', [RoomController::class, 'index'])->name('list');
-    Route::get('create', [RoomController::class, 'create'])->name('create');
-    Route::post('store', [RoomController::class, 'store'])->name('store');
-    Route::post('store-file', [RoomController::class, 'storeFile'])->name('store_file');
-    Route::get('edit/{id}', [RoomController::class, 'edit'])->name('edit');
-    Route::get('image/{id}', [RoomController::class, 'getRoomImages'])->name('image');
-    Route::put('update/{id}', [RoomController::class, 'update'])->name('update');
-    Route::put('update-file', [RoomController::class, 'storeFile'])->name('update_file');
-    Route::delete('destroy/{id}', [RoomController::class, 'destroy'])->name('destroy');
-    Route::delete('image/destroy/{id}', [RoomController::class, 'deleteImage'])->name('destroy_file');
+    Route::get('/', [RoomTypeController::class, 'index'])->name('list');
+    Route::get('create', [RoomTypeController::class, 'create'])->name('create');
+    Route::post('store', [RoomTypeController::class, 'store'])->name('store');
+    Route::post('store-file', [RoomTypeController::class, 'storeFile'])->name('store_file');
+    Route::get('edit/{id}', [RoomTypeController::class, 'edit'])->name('edit');
+    Route::get('image/{id}', [RoomTypeController::class, 'getRoomImages'])->name('image');
+    Route::put('update/{id}', [RoomTypeController::class, 'update'])->name('update');
+    Route::put('update-file', [RoomTypeController::class, 'storeFile'])->name('update_file');
+    Route::delete('destroy/{id}', [RoomTypeController::class, 'destroy'])->name('destroy');
+    Route::delete('image/destroy/{id}', [RoomTypeController::class, 'deleteImage'])->name('destroy_file');
 
     Route::group([
       'prefix' => 'feature',
@@ -129,5 +130,13 @@ Route::group([
       Route::put('update/{id}', [RoomFeatureController::class, 'update'])->name('update');
       Route::delete('destroy/{id}', [RoomFeatureController::class, 'destroy'])->name('destroy');
     });
+  });
+
+  Route::group([
+    'prefix' => 'booking',
+    'as' => 'booking.'
+  ], function () {
+    Route::get('/', [BookingController::class, 'index'])->name('list');
+    Route::get('/change/status/{id}', [BookingController::class, 'changeBookingStatus'])->name('status');
   });
 });

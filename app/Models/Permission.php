@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -50,5 +52,13 @@ class Permission extends Model
     public function modules()
     {
         return $this->belongsToMany(Module::class, "module_permission", "permission_id", "module_id");
+    }
+
+    /**
+     * The permissions that belong to the user.
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, "module_permission_role", "permission_id", "role_id");
     }
 }

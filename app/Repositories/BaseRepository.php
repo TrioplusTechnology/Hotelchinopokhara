@@ -28,7 +28,7 @@ abstract class BaseRepository implements BaseInterface
 
     public function getAll()
     {
-        return $this->model->all();
+        return $this->model->all()->sortByDesc("created_at");
     }
 
     public function getById($id): ?Model
@@ -62,5 +62,10 @@ abstract class BaseRepository implements BaseInterface
     public function findAllWhere($data)
     {
         return $this->model::where($data)->get();
+    }
+
+    public function insert($data)
+    {
+        return $this->model::insert($data);
     }
 }

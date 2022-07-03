@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Backend\Settings;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Settings\RoleRequest;
+use App\Http\Requests\Backend\Settings\RoleModulePermissionMappingRequest;
 use App\Services\Backend\Settings\ModuleService;
 use App\Services\Backend\Settings\PermissionService;
+use App\Services\Backend\Settings\RoleModulePermissionMappingService;
 use App\Services\Backend\Settings\RoleService;
 use App\Traits\CommonTrait;
 use Exception;
 use Illuminate\Http\Request;
 
-class RoleController extends BackendController
+class RoleModulePermissionMappingController extends BackendController
 {
     /**
      * Common traits
@@ -32,12 +33,15 @@ class RoleController extends BackendController
      */
     private $permissionService;
 
-    public function __construct(RoleService $roleService, ModuleService $moduleService, PermissionService $permissionService)
+    private $mappingService;
+
+    public function __construct(RoleService $roleService, ModuleService $moduleService, PermissionService $permissionService, RoleModulePermissionMappingService $mappingService)
     {
         parent::__construct();
 
         $this->roleService = $roleService;
         $this->moduleService = $moduleService;
+        $this->mappingService = $mappingService;
         $this->permissionService = $permissionService;
     }
 
@@ -48,14 +52,11 @@ class RoleController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.role') . ' ' . __('messages.list');
-        self::$data['lists'] = $lists = $this->roleService->getAll();
-        self::$data['keys'] = $this->getKeysFromExtractedData($lists);
-        self::$data['addUrl']  = route('admin.setting.role.create');
-        self::$data['deleteUrl']  = 'admin.setting.role.destroy';
-        self::$data['editUrl']  = 'admin.setting.role.edit';
+        self::$data['heading'] = __('messages.role_module_permission_mapping') . ' ' . __('messages.list');
+        self::$data['addUrl']  = route('admin.setting.mapping.create');
+        self::$data['modules'] = $this->moduleService->getAllModule();
 
-        return view("backend.common.list", self::$data);
+        return view("backend.settings.role_module_permission.list", self::$data);
     }
 
     /**
@@ -65,15 +66,15 @@ class RoleController extends BackendController
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.role');
+        self::$data['heading'] = __('messages.role_module_permission_mapping');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.setting.role.list');
-        self::$data['requestUrl'] = route('admin.setting.role.store');
+        self::$data['backUrl'] = route('admin.setting.mapping.list');
+        self::$data['requestUrl'] = route('admin.setting.mapping.store');
         self::$data['requestMethod'] = 'POST';
-        self::$data['modules'] = $this->moduleService->getAllModule();
-        self::$data['permissions'] = $this->permissionService->getAll();
+        self::$data['roles'] = $this->roleService->getAll();
+        self::$data['modules'] = $modules = $this->moduleService->getAllModule();
 
-        return view("backend.settings.role.create", self::$data);
+        return view("backend.settings.role_module_permission.create", self::$data);
     }
 
     /**
@@ -82,11 +83,11 @@ class RoleController extends BackendController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoleRequest $request)
+    public function store(RoleModulePermissionMappingRequest $request)
     {
         try {
             $validated = $request->validated();
-            $this->roleService->store($validated);
+            $this->mappingService->store($validated);
             return redirect()->route("admin.setting.role.list")->with('success', __('messages.success.save', ['RECORD' => 'Role']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -161,6 +162,52 @@ class RoleController extends BackendController
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Role']),
                 'redirectUrl' => route("admin.setting.role.list")
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'code' => $e->getCode(),
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return response()->json($response, $response['code']);
+    }
+
+    /**
+     * Gets permission by module
+     */
+    public function getPermissionByModule(Request $request)
+    {
+        try {
+            if (!$request->ajax())
+                throw new Exception(__('messages.error.direct_script_not_allowed'), 400);
+
+            if (empty($request->module) || !is_numeric($request->module))
+                throw new Exception(__('messages.error.bad_request'), 400);
+
+            $module = $this->moduleService->getModuleById($request->module);
+            if (!$module)
+                throw new Exception(__('messages.error.not_found', ['RECORD' => 'Module']), 404);
+
+            $permissionHtml = "";
+
+            foreach ($module->permissions as $key => $permission) {
+                $permissionHtml .= '<div class="icheck-primary d-inline">
+                    <input type="checkbox" id="permission' . $key . '" name="permission[]" value="' . $permission->id . '">
+                    <label for="permission' . $key . '">
+                        ' . $permission->name . '
+                    </label>
+                </div>';
+            }
+
+            if (empty($permissionHtml)) throw new Exception(__('messages.error.not_found', ['RECORD' => 'Permission']), 404);
+
+            $response = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => __('messages.success.get', ['RECORD' => 'Permissions']),
+                'data' => $permissionHtml
             ];
         } catch (Exception $e) {
             $response = [

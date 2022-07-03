@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class RoomRequest extends FormRequest
+class RoomTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class RoomRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string'],
-            'slug' => ['required', 'string', Rule::unique('bars', 'slug')->ignore($request->id)],
+            'slug' => ['required', 'string', Rule::unique('room_type', 'slug')->ignore($request->id)],
             'status' => ['required', 'boolean'],
             'description' => ['required', 'string'],
             'features' => ['required', 'array'],

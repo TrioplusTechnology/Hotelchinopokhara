@@ -2,28 +2,30 @@
 
 namespace App\Models;
 
-use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recreation extends Model
+class Booking extends Model
 {
-    use HasFactory, CreatedUpdatedTrait;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
+
+    protected $table = "booking";
     protected $fillable = [
-        'title',
-        'image',
-        'slug',
+        'room_type_id',
+        'room_id',
+        'first_name',
+        'last_name',
+        'email',
+        'phone',
         'status',
-        'order',
-        'description',
-        'created_by',
-        'updated_by',
+        'check_in_date',
+        'check_out_date',
         'created_at',
         'updated_at'
     ];
@@ -37,11 +39,4 @@ class Recreation extends Model
         'created_at',
         'updated_at'
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [];
 }

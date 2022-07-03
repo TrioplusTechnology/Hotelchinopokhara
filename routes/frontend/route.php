@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Frontend\AboutUsController;
 use App\Http\Controllers\Frontend\BarController;
+use App\Http\Controllers\Frontend\BookingController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\Frontend\EventController;
 use App\Http\Controllers\Frontend\GalleryController;
@@ -33,6 +34,8 @@ Route::get('/contact', [ContactController::class, 'index']);
 Route::get('/gallery', [GalleryController::class, 'index']);
 Route::get('/gallery/album/{id}', [GalleryController::class, 'getAlbums']);
 
+Route::get('/book', [BookingController::class, 'index']);
+Route::post('/book', [BookingController::class, 'book']);
 // /**
 //  * Auth routes
 //  */

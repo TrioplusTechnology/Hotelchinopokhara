@@ -53,7 +53,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label for="permission_description">{{ __('messages.permission_description') }}</label>
-                <textarea name="description" class="form-control @error('name') is-invalid @enderror" id="permission_description" rows="3" placeholder="{{ __('messages.permission_description') }}">{{ old('code', isset($permission) ? $permission->code : '' ) }}</textarea>
+                <textarea name="description" class="form-control @error('description') is-invalid @enderror" id="permission_description" rows="3" placeholder="{{ __('messages.permission_description') }}">{{ old('code', isset($permission) ? $permission->code : '' ) }}</textarea>
                 @error('description')
                 <span class="invalid-feedback" role="alert">{{ $message }}</span>
                 @enderror

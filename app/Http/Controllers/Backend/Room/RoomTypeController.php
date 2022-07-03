@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Backend\Room;
 
 use App\Http\Controllers\Backend\BackendController;
-use App\Http\Requests\Backend\Room\RoomRequest;
+use App\Http\Requests\Backend\Room\RoomTypeRequest;
 use App\Services\Backend\Room\RoomFeatureService;
-use App\Services\Backend\Room\RoomService;
+use App\Services\Backend\Room\RoomTypeService;
 use App\Traits\CommonTrait;
 use Exception;
 use Illuminate\Http\Request;
 
-class RoomController extends BackendController
+class RoomTypeController extends BackendController
 {
     /**
      * Common traits
@@ -20,15 +20,15 @@ class RoomController extends BackendController
     /**
      * Module Service
      */
-    private $roomService;
+    private $roomTypeService;
 
     private $roomFeatureService;
 
-    public function __construct(RoomService $roomService, RoomFeatureService $roomFeatureService)
+    public function __construct(RoomTypeService $roomTypeService, RoomFeatureService $roomFeatureService)
     {
         parent::__construct();
 
-        $this->roomService = $roomService;
+        $this->roomTypeService = $roomTypeService;
         $this->roomFeatureService = $roomFeatureService;
     }
 
@@ -39,12 +39,12 @@ class RoomController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.room') . ' ' . __('messages.list');
-        self::$data['lists'] =  $lists = $this->roomService->getAll();
+        self::$data['heading'] = __('messages.room') . ' ' . __('messages.type') . ' ' . __('messages.list');
+        self::$data['lists'] =  $lists = $this->roomTypeService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
-        self::$data['addUrl']  = route('admin.room.create');
-        self::$data['deleteUrl']  = 'admin.room.destroy';
-        self::$data['editUrl']  = 'admin.room.edit';
+        self::$data['addUrl']  = route('admin.roomtype.create');
+        self::$data['deleteUrl']  = 'admin.roomtype.destroy';
+        self::$data['editUrl']  = 'admin.roomtype.edit';
 
         return view("backend.common.list", self::$data);
     }
@@ -56,14 +56,14 @@ class RoomController extends BackendController
      */
     public function create()
     {
-        self::$data['heading'] = __('messages.room');
+        self::$data['heading'] = __('messages.room') . ' ' . __('messages.type');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.room.list');
-        self::$data['requestUrl'] = route('admin.room.store');
+        self::$data['backUrl'] = route('admin.roomtype.list');
+        self::$data['requestUrl'] = route('admin.roomtype.store');
         self::$data['requestMethod'] = 'POST';
         self::$data['features'] = $this->roomFeatureService->getAll();
 
-        return view("backend.room.room_form", self::$data);
+        return view("backend.room.roomtype_form", self::$data);
     }
 
     /**
@@ -72,14 +72,14 @@ class RoomController extends BackendController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoomRequest $request)
+    public function store(RoomTypeRequest $request)
     {
         try {
             if (!$request->ajax()) {
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
             $validated = $request->validated();
-            $result = $this->roomService->store($validated);
+            $result = $this->roomTypeService->store($validated);
 
             $response = [
                 'status' => 'success',
@@ -117,15 +117,15 @@ class RoomController extends BackendController
     public function edit($id)
     {
         try {
-            self::$data['room'] = $this->roomService->getById($id);
-            self::$data['heading'] = __('messages.room');
-            self::$data['requestUrl'] = route('admin.room.update', ['id' => self::$data['room']->id]);
-            self::$data['backUrl'] = route('admin.room.list');
+            self::$data['room'] = $this->roomTypeService->getById($id);
+            self::$data['heading'] = __('messages.room') . ' ' . __('messages.type');
+            self::$data['requestUrl'] = route('admin.roomtype.update', ['id' => self::$data['room']->id]);
+            self::$data['backUrl'] = route('admin.roomtype.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
             self::$data['features'] = $this->roomFeatureService->getAll();
 
-            return view("backend.room.room_form", self::$data);
+            return view("backend.room.roomtype_form", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -138,19 +138,19 @@ class RoomController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RoomRequest $request, $id)
+    public function update(RoomTypeRequest $request, $id)
     {
         try {
             if (!$request->ajax()) {
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
             $validated = $request->validated();
-            $result = $this->roomService->update($validated, $id);
+            $result = $this->roomTypeService->update($validated, $id);
 
             $response = [
                 'status' => 'success',
                 'code' => 200,
-                'message' => __('messages.success.save', ['RECORD' => 'Room']),
+                'message' => __('messages.success.save', ['RECORD' => 'Room Type']),
                 'data' => $result
             ];
         } catch (Exception $e) {
@@ -172,13 +172,13 @@ class RoomController extends BackendController
     public function destroy($id)
     {
         try {
-            $this->roomService->destroy($id);
+            $this->roomTypeService->destroy($id);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Module']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.room.list")
+                'redirectUrl' => route("admin.roomtype.list")
             ];
         } catch (Exception $e) {
             $response = [
@@ -204,7 +204,7 @@ class RoomController extends BackendController
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
 
-            $this->roomService->storeFile($request);
+            $this->roomTypeService->storeFile($request);
 
             $response = [
                 'status' => 'success',
@@ -228,7 +228,7 @@ class RoomController extends BackendController
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
 
-            $result = $this->roomService->getRoomImages($id);
+            $result = $this->roomTypeService->getRoomImages($id);
 
             $response = [
                 'status' => 'success',
@@ -253,7 +253,7 @@ class RoomController extends BackendController
                 throw new Exception(__('messages.error.direct_script_not_allowed'), 419);
             }
 
-            $result = $this->roomService->deleteImage($request, $id);
+            $result = $this->roomTypeService->deleteImage($request, $id);
 
             $response = [
                 'status' => 'success',

@@ -2,12 +2,14 @@
 
 namespace App\Models\Room;
 
+use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RoomFeature extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The table associated with the model.
@@ -56,6 +58,6 @@ class RoomFeature extends Model
      */
     public function rooms()
     {
-        return $this->belongsToMany(Room::class, 'room_feature_mappings', 'room_feature_id', 'room_id');
+        return $this->belongsToMany(RoomType::class, 'room_feature_mappings', 'room_feature_id', 'room_id');
     }
 }

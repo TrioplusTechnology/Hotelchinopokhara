@@ -3,16 +3,16 @@
 namespace App\Services\Backend\Room;
 
 use App\Repositories\Backend\Room\RoomImageRepository;
-use App\Repositories\Backend\Room\RoomRepository;
+use App\Repositories\Backend\Room\RoomTypeRepository;
 use Exception;
 
-class RoomService
+class RoomTypeService
 {
 
     /**
      * @var $registrationRepository
      */
-    protected $roomRepository;
+    protected $roomTypeRepository;
 
     /**
      * @var $registrationRepository
@@ -22,9 +22,9 @@ class RoomService
     /**
      * Constructor
      */
-    public function __construct(RoomRepository $roomRepository, RoomImageRepository $roomImageRepository)
+    public function __construct(RoomTypeRepository $roomTypeRepository, RoomImageRepository $roomImageRepository)
     {
-        $this->roomRepository = $roomRepository;
+        $this->roomTypeRepository = $roomTypeRepository;
         $this->roomImageRepository = $roomImageRepository;
     }
 
@@ -33,7 +33,7 @@ class RoomService
      */
     public function store($data)
     {
-        $result = $this->roomRepository->store($data);
+        $result = $this->roomTypeRepository->store($data);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'Room']), 501);
 
@@ -52,7 +52,7 @@ class RoomService
      */
     public function getAll()
     {
-        return $this->roomRepository->getAll();
+        return $this->roomTypeRepository->getAll();
     }
 
     /**
@@ -60,7 +60,7 @@ class RoomService
      */
     public function getById($id)
     {
-        $result = $this->roomRepository->getById($id);
+        $result = $this->roomTypeRepository->getById($id);
 
         if (empty($result)) {
             throw new Exception(__('messages.error.not_found', ['RECORD' => 'module']), 404);
@@ -79,7 +79,7 @@ class RoomService
             array_push($pivotData, ['room_id' => $id, 'room_feature_id' => (int)$feature]);
         }
         unset($data['features']);
-        $result = $this->roomRepository->update($data, $id);
+        $result = $this->roomTypeRepository->update($data, $id);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'Room']), 501);
 
@@ -94,7 +94,7 @@ class RoomService
      */
     public function destroy($id)
     {
-        $result = $this->roomRepository->destroy($id);
+        $result = $this->roomTypeRepository->destroy($id);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_delete', ['RECORD' => 'module']), 422);
         return $result;

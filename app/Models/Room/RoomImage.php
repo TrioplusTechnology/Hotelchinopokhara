@@ -2,12 +2,14 @@
 
 namespace App\Models\Room;
 
+use App\Traits\CreatedUpdatedTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RoomImage extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        CreatedUpdatedTrait;
 
     /**
      * The table associated with the model.
@@ -55,6 +57,6 @@ class RoomImage extends Model
      */
     public function room()
     {
-        return $this->belongsTo(Room::class, 'room_id');
+        return $this->belongsTo(RoomType::class, 'room_id');
     }
 }

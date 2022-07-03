@@ -31,6 +31,7 @@
                                 <a class="font-semibold" href="{{ url('/contact') }}">Contact</a>
                             </li>
                         </ul>
+                        <a class="btn btn-primary btn-sm ml-4" href="{{ url('/book') }}">Book Now</a>
                     </div>
                     <button class="navbar-toggler btn-con btn-icon-only" type="button" id="navbarToggle">
                         <span class="ic-menu h4"></span>

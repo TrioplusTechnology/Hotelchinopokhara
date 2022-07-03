@@ -7,6 +7,7 @@
     <title>Hotel Chino Pokhara</title>
     <link href="{{ asset('css/frontend/1.style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/frontend/style.css') }}" rel="stylesheet" />
+    @yield('styles')
 </head>
 
 <body>
