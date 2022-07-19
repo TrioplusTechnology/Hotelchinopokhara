@@ -6,12 +6,12 @@
         <!-- Small boxes (Stat box) -->
         <div class="card card-default">
             <div class="card-header">
-                <h3 class="card-title">{{ $heading }}</h3>
+                <h3 class="card-title">{{ $subHeading }}</h3>
             </div>
 
             <form method="{{ $requestMethod }}" action="{{ $requestUrl }}">
                 @csrf
-                @if(isset($mapping))
+                @if(isset($mappingData))
                 <input type="hidden" name="_method" value="PUT">
                 @endif
                 <!-- /.card-header -->
@@ -22,7 +22,7 @@
                                 <label for="role">{{ __('messages.role_name') }}</label>
                                 <select name="role" class="form-control @error('role') is-invalid @enderror" id="role">
                                     @foreach($roles as $role)
-                                    <option value="{{ $role->id }}" {{ (old('role', (isset($mapping) ? $mapping->role : '')) == 1) ? 'selected' : '' }}>{{ $role->name }}</option>
+                                    <option value="{{ $role->id }}" {{ (old('role', (isset($mappingData) ? $mappingData->role_id : '')) == $role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('status')
@@ -36,7 +36,7 @@
                                 <label for="module">{{ __('messages.module_name') }}</label>
                                 <select name="module" class="form-control @error('module') is-invalid @enderror" id="module">
                                     @foreach($modules as $module)
-                                    <option value="{{ $module->id }}" {{ (old('module', (isset($mapping) ? $mapping->module : '')) == 1) ? 'selected' : '' }}>{{ $module->name }}</option>
+                                    <option value="{{ $module->id }}" {{ (old('module', (isset($mapping) ? $mappingData->module_id : '')) == $module->id) ? 'selected' : '' }}>{{ $module->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('status')
@@ -74,12 +74,15 @@
             e.preventDefault();
             const url = "{{ route('admin.setting.mapping.get-permission-by-module') }}";
             const module = $(this).val();
+            const role = $("#role").val();
             $.ajax({
                 type: "POST",
                 url: url,
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    module
+                    module,
+                    role,
+                    "isEdit": "{{ isset($mappingData) ? true : false }}"
                 },
                 beforeSend: function() {
                     $("#permission_list").html("");
@@ -92,6 +95,7 @@
                 }
             })
         })
+        $("#module").trigger("change");
     })
 </script>
 @endsection

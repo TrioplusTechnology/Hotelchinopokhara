@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\Auth\VerifyEmailController;
 use App\Http\Controllers\Backend\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Backend\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Backend\Auth\RegisteredUserController;
+use App\Http\Controllers\Backend\UserManagement\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -72,10 +73,13 @@ Route::group([
       'as' => 'user.',
       'middleware' => 'auth',
     ], function () {
-      Route::get('/register', [RegisteredUserController::class, 'create'])
+      Route::get('/', [UserController::class, 'index'])->name('list');
+      Route::get('/register', [UserController::class, 'create'])
         ->name('register');
-
-      Route::post('/register', [RegisteredUserController::class, 'store'])->name('store');
+      Route::post('/register', [UserController::class, 'store'])->name('store');
+      Route::get('/register/edit/{id}', [UserController::class, 'edit'])->name('edit');
+      Route::put('/register/update/{id}', [UserController::class, 'update'])->name('update');
+      Route::delete('/register/delete/{id}', [UserController::class, 'delete'])->name('delete');
     });
   });
 });

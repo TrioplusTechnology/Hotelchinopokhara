@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Settings;
 
 use App\Http\Controllers\Backend\BackendController;
 use App\Http\Requests\Backend\Settings\RoleModulePermissionMappingRequest;
+use App\Http\Requests\Backend\Settings\RoleRequest;
 use App\Services\Backend\Settings\ModuleService;
 use App\Services\Backend\Settings\PermissionService;
 use App\Services\Backend\Settings\RoleModulePermissionMappingService;
@@ -52,9 +53,10 @@ class RoleModulePermissionMappingController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.role_module_permission_mapping') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.role_module_permission_mapping');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['addUrl']  = route('admin.setting.mapping.create');
-        self::$data['modules'] = $this->moduleService->getAllModule();
+        self::$data['mappingList'] = $this->roleService->getAllRoleModulePermissionData();
 
         return view("backend.settings.role_module_permission.list", self::$data);
     }
@@ -67,6 +69,7 @@ class RoleModulePermissionMappingController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.role_module_permission_mapping');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.setting.mapping.list');
         self::$data['requestUrl'] = route('admin.setting.mapping.store');
@@ -88,7 +91,7 @@ class RoleModulePermissionMappingController extends BackendController
         try {
             $validated = $request->validated();
             $this->mappingService->store($validated);
-            return redirect()->route("admin.setting.role.list")->with('success', __('messages.success.save', ['RECORD' => 'Role']));
+            return redirect()->route("admin.setting.mapping.list")->with('success', __('messages.success.save', ['RECORD' => 'Role']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -111,17 +114,21 @@ class RoleModulePermissionMappingController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($roleId, $moduleId)
     {
         try {
-            self::$data['role'] = $role = $this->roleService->getRoleById($id);
-            self::$data['heading'] = __('messages.edit');
-            self::$data['requestUrl'] = route('admin.setting.role.update', ['id' => self::$data['role']->id]);
-            self::$data['backUrl'] = route('admin.setting.role.list');
+            self::$data['mappingData'] = $this->roleService->getRoleModulePermissionMappingByIds($roleId, $moduleId);
+            self::$data['mappingData']->permissions = json_decode(self::$data['mappingData']->permissions);
+            self::$data['roles'] = $this->roleService->getAll();
+            self::$data['modules'] = $this->moduleService->getAllModule();
+            self::$data['heading'] = __('messages.role_module_permission_mapping');
+            self::$data['subHeading'] = __('messages.edit');
+            self::$data['requestUrl'] = route('admin.setting.mapping.update', ['roleId' => $roleId, 'moduleId' => $moduleId]);
+            self::$data['backUrl'] = route('admin.setting.mapping.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
-            return view("backend.settings.role.create", self::$data);
+            return view("backend.settings.role_module_permission.create", self::$data);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -134,13 +141,13 @@ class RoleModulePermissionMappingController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RoleRequest $request, $id)
+    public function update(RoleRequest $request, $roleId, $moduleId)
     {
         try {
             $validated = $request->validated();
             $this->roleService->update($validated, $id);
 
-            return redirect()->route("admin.setting.role.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.setting.mapping.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -161,7 +168,7 @@ class RoleModulePermissionMappingController extends BackendController
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Role']),
-                'redirectUrl' => route("admin.setting.role.list")
+                'redirectUrl' => route("admin.setting.role_module_permission.list")
             ];
         } catch (Exception $e) {
             $response = [
@@ -192,9 +199,14 @@ class RoleModulePermissionMappingController extends BackendController
 
             $permissionHtml = "";
 
+            // dd($this->roleService->getRoleModulePermissionMappingByIds($request->role_id, $request->module_id));
+
+            $permissionArray = $request->isEdit ? $this->getPermissionInArray($request->role, $request->module) : [];
+
             foreach ($module->permissions as $key => $permission) {
+                $checked = in_array($permission->id, $permissionArray) ? 'checked' : '';
                 $permissionHtml .= '<div class="icheck-primary d-inline">
-                    <input type="checkbox" id="permission' . $key . '" name="permission[]" value="' . $permission->id . '">
+                    <input type="checkbox" id="permission' . $key . '" name="permission[]" value="' . $permission->id . '"  ' . $checked . '>
                     <label for="permission' . $key . '">
                         ' . $permission->name . '
                     </label>
@@ -218,5 +230,22 @@ class RoleModulePermissionMappingController extends BackendController
         }
 
         return response()->json($response, $response['code']);
+    }
+
+    public function getPermissionInArray($roleId, $moduleId)
+    {
+        $permissionData = $this->roleService->getRoleModulePermissionMappingByIds($roleId, $moduleId);
+
+        $permissionArray = [];
+
+        if ($permissionData) {
+
+            foreach (json_decode($permissionData->permissions, TRUE) as $permission) {
+                array_push($permissionArray, $permission['id']);
+            }
+        }
+
+
+        return $permissionArray;
     }
 }

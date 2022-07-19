@@ -47,6 +47,14 @@ class Role extends Model
     protected $casts = [];
 
     /**
+     * The roles that belong to the user.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, "role_user", "role_id", "user_id");
+    }
+
+    /**
      * The permissions that belong to the user.
      */
     public function permissions()

@@ -46,7 +46,8 @@ class ModuleController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.module') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.module');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['addUrl']  = route('admin.setting.module.create');
         self::$data['modules'] = $this->moduleService->getAllModule();
 
@@ -61,6 +62,7 @@ class ModuleController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.module');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.setting.module.list');
         self::$data['requestUrl'] = route('admin.setting.module.store');
@@ -107,10 +109,11 @@ class ModuleController extends BackendController
     public function edit($id)
     {
         try {
+            self::$data['heading'] = __('messages.module');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['module'] = $modules = $this->moduleService->getModuleById($id);
             self::$data['permissionArray'] = $this->getAllPermissionInArray($modules);
             self::$data['permissions'] = $this->permissionService->getAll();
-            self::$data['heading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.setting.module.update', ['id' => self::$data['module']->id]);
             self::$data['backUrl'] = route('admin.setting.module.list');
             self::$data['requestMethod'] = 'POST';

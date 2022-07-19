@@ -48,7 +48,8 @@ class RoleController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.role') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.role');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['lists'] = $lists = $this->roleService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.setting.role.create');
@@ -66,6 +67,7 @@ class RoleController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.role');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.setting.role.list');
         self::$data['requestUrl'] = route('admin.setting.role.store');
@@ -113,8 +115,9 @@ class RoleController extends BackendController
     public function edit($id)
     {
         try {
+            self::$data['heading'] = __('messages.role');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['role'] = $role = $this->roleService->getRoleById($id);
-            self::$data['heading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.setting.role.update', ['id' => self::$data['role']->id]);
             self::$data['backUrl'] = route('admin.setting.role.list');
             self::$data['requestMethod'] = 'POST';

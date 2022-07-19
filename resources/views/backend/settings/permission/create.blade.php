@@ -6,7 +6,7 @@
     <!-- Small boxes (Stat box) -->
     <div class="card card-default">
       <div class="card-header">
-        <h3 class="card-title">{{ $heading }}</h3>
+        <h3 class="card-title">{{ $subHeading }}</h3>
       </div>
 
       <form method="{{ $requestMethod }}" action="{{ $requestUrl }}">
@@ -42,7 +42,7 @@
                 <label for="permission_status">{{ __('messages.permission_status') }}</label>
                 <select name="status" class="form-control @error('status') is-invalid @enderror" id="permission_status">
                   <option value="1" {{ (old('status', (isset($permission) ? $permission->status : '')) == 1) ? 'selected' : '' }}>True</option>
-                  <option value="0" {{ (old('status', (isset($permission) ? $permission->status : '')) == 1) ? 'selected' : '' }}>False</option>
+                  <option value="0" {{ (old('status', (isset($permission) ? $permission->status : '')) == 0) ? 'selected' : '' }}>False</option>
                 </select>
                 @error('status')
                 <span class="invalid-feedback" role="alert">{{ $message }}</span>

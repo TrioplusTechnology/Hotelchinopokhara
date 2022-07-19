@@ -65,9 +65,9 @@ Route::group([
       Route::get('/', [RoleModulePermissionMappingController::class, 'index'])->name('list');
       Route::get('create', [RoleModulePermissionMappingController::class, 'create'])->name('create');
       Route::post('store', [RoleModulePermissionMappingController::class, 'store'])->name('store');
-      Route::get('edit/{id}', [RoleModulePermissionMappingController::class, 'edit'])->name('edit');
-      Route::put('update/{id}', [RoleModulePermissionMappingController::class, 'update'])->name('update');
-      Route::delete('destroy/{id}', [RoleModulePermissionMappingController::class, 'destroy'])->name('destroy');
+      Route::get('edit/{roleId}/{moduleId}', [RoleModulePermissionMappingController::class, 'edit'])->name('edit');
+      Route::put('update/{roleId}/{moduleId}', [RoleModulePermissionMappingController::class, 'update'])->name('update');
+      Route::delete('destroy/{roleId}/{moduleId}', [RoleModulePermissionMappingController::class, 'destroy'])->name('destroy');
       Route::post('get-permission-by-module', [RoleModulePermissionMappingController::class, 'getPermissionByModule'])->name('get-permission-by-module');
     });
   });

@@ -67,6 +67,7 @@ return [
   'role_module_permission_mapping' => 'Role Module Permission Mapping',
   'booking' => 'Booking',
   'type' => 'Type',
+  'create' => 'Create',
 
   /**
    * Error messages

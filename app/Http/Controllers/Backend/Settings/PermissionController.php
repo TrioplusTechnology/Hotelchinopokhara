@@ -35,7 +35,8 @@ class PermissionController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.permission') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.permission');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['lists'] =  $lists = $this->permissionService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.setting.permission.create');
@@ -53,6 +54,7 @@ class PermissionController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.permission');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.setting.permission.list');
         self::$data['requestUrl'] = route('admin.setting.permission.store');
@@ -98,7 +100,8 @@ class PermissionController extends BackendController
     {
         try {
             self::$data['permission'] = $this->permissionService->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.permission');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.setting.permission.update', ['id' => self::$data['permission']->id]);
             self::$data['backUrl'] = route('admin.setting.permission.list');
             self::$data['requestMethod'] = 'POST';

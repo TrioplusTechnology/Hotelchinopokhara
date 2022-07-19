@@ -39,6 +39,7 @@ abstract class BaseRepository implements BaseInterface
     public function update(array $data, $id)
     {
         $result = $this->model->where(['id' => $id])->update($data);
+
         if (!$result) {
             throw new Exception(__('messages.error.not_found', ['RECORD' => 'record']), 404);
         };

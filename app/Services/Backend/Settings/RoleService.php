@@ -77,4 +77,14 @@ class RoleService
         if (!$result) throw new Exception(__('messages.error.failed_to_delete', ['RECORD' => 'role']), 422);
         return $result;
     }
+
+    public function getAllRoleModulePermissionData()
+    {
+        return $this->roleRepository->getAllRoleModulePermissionData();
+    }
+
+    public function getRoleModulePermissionMappingByIds($roleId, $moduleId)
+    {
+        return $this->roleRepository->getRoleModulePermissionMappingByIds($roleId, $moduleId);
+    }
 }

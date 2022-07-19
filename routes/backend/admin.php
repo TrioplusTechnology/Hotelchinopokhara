@@ -24,12 +24,12 @@ Route::group([
     'prefix' => 'about-us',
     'as' => 'about_us.'
   ], function () {
-    Route::get('/', [AboutUsController::class, 'index'])->name('list');
-    Route::get('create', [AboutUsController::class, 'create'])->name('create');
-    Route::post('store', [AboutUsController::class, 'store'])->name('store');
-    Route::get('edit/{id}', [AboutUsController::class, 'edit'])->name('edit');
-    Route::put('update/{id}', [AboutUsController::class, 'update'])->name('update');
-    Route::delete('destroy/{id}', [AboutUsController::class, 'destroy'])->name('destroy');
+    Route::get('/', [AboutUsController::class, 'index'])->name('list')->middleware('can:viewList, App\Models\About');
+    Route::get('create', [AboutUsController::class, 'create'])->name('create')->middleware('can:create, App\Models\About');
+    Route::post('store', [AboutUsController::class, 'store'])->name('store')->middleware('can:create, App\Models\About');
+    Route::get('edit/{id}', [AboutUsController::class, 'edit'])->name('edit')->middleware('can:update, App\Models\About');
+    Route::put('update/{id}', [AboutUsController::class, 'update'])->name('update')->middleware('can:update, App\Models\About');
+    Route::delete('destroy/{id}', [AboutUsController::class, 'destroy'])->name('destroy')->middleware('can:delete, App\Models\About');
   });
 
   Route::group([
