@@ -41,7 +41,8 @@ class UserController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.user') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.user');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['lists'] =  $lists = $this->userService->getAllUsers();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.user-management.user.register');
@@ -59,6 +60,7 @@ class UserController extends BackendController
     public function create()
     {
         self::$data['heading'] = __("messages.user");
+        self::$data['subHeading'] = __('messages.create');
         self::$data['requestMethod'] = "POST";
         self::$data['requestUrl'] =  route('admin.user-management.user.register');
         self::$data['btnName'] =  "Create";
@@ -81,9 +83,9 @@ class UserController extends BackendController
 
         // event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('admin.user-management.user.list');
     }
 
     /**
@@ -96,7 +98,8 @@ class UserController extends BackendController
     {
         try {
             self::$data['user'] = $user = $this->userService->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.user');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.user-management.user.update', ['id' => self::$data['user']->id]);
             self::$data['backUrl'] = route('admin.user-management.user.list');
             self::$data['requestMethod'] = 'POST';

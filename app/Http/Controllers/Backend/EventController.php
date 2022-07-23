@@ -35,7 +35,9 @@ class EventController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.events') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.events');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "event";
         self::$data['lists'] =  $lists = $this->eventService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.event.create');
@@ -53,6 +55,7 @@ class EventController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.events');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.event.list');
         self::$data['requestUrl'] = route('admin.event.store');
@@ -113,6 +116,7 @@ class EventController extends BackendController
         try {
             self::$data['event'] = $this->eventService->getById($id);
             self::$data['heading'] = __('messages.events');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.event.update', ['id' => self::$data['event']->id]);
             self::$data['backUrl'] = route('admin.event.list');
             self::$data['requestMethod'] = 'POST';

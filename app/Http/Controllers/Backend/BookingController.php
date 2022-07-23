@@ -33,7 +33,9 @@ class BookingController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.booking') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.booking');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "booking";
         self::$data['lists'] =  $lists = $this->bookingService->getAll();
 
         return view("backend.booking", self::$data);

@@ -34,7 +34,9 @@ class ServiceController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.services') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.services');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "services";
         self::$data['lists'] =  $lists = $this->service->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.service.create');
@@ -52,6 +54,7 @@ class ServiceController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.services');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.service.list');
         self::$data['requestUrl'] = route('admin.service.store');
@@ -97,7 +100,8 @@ class ServiceController extends BackendController
     {
         try {
             self::$data['services'] = $this->service->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.services');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.service.update', ['id' => self::$data['services']->id]);
             self::$data['backUrl'] = route('admin.service.list');
             self::$data['requestMethod'] = 'POST';

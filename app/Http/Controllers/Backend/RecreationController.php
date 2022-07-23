@@ -34,8 +34,10 @@ class RecreationController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.recreation') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.recreation');
+        self::$data['subHeading'] = __('messages.list');
         self::$data['lists'] =  $lists = $this->recreationService->getAll();
+        self::$data['moduleName'] =  "recreation";
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.recreation.create');
         self::$data['deleteUrl']  = 'admin.recreation.destroy';
@@ -52,6 +54,7 @@ class RecreationController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.recreation');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.recreation.list');
         self::$data['requestUrl'] = route('admin.recreation.store');
@@ -97,7 +100,8 @@ class RecreationController extends BackendController
     {
         try {
             self::$data['recreations'] = $this->recreationService->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.recreation');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.recreation.update', ['id' => self::$data['recreations']->id]);
             self::$data['backUrl'] = route('admin.recreation.list');
             self::$data['requestMethod'] = 'POST';

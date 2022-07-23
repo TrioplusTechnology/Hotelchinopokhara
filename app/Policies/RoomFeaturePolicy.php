@@ -5,11 +5,11 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy extends BasePolicy
+class RoomFeaturePolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
-    protected $module = 'user';
+    protected $module = "room-feature";
 
     /**
      * Create a new policy instance.
@@ -18,6 +18,6 @@ class UserPolicy extends BasePolicy
      */
     public function __construct()
     {
-        parent::__construct();
+        //
     }
 }

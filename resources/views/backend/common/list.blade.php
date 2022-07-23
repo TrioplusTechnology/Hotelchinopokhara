@@ -47,8 +47,11 @@
                             @endif
                             @endforeach
                             <td>
-                                <a href="{{ route($editUrl, ['id' => $list->id]) }}" class="btn btn-sm btn-success btn-flat" data-toggle="tooltip" data-placement="top" title="{{ __('messages.edit') }}"><i class="fa fa-edit"></i></a>&nbsp;
+                                @if(auth()->user()->isSuperAdmin() || auth()->user()->checkPermission(auth()->user(), $moduleName, 'canUpdate'))
+                                <a href="{{ route($editUrl, ['id' => $list->id]) }}" class="btn btn-sm btn-success btn-flat" data-toggle="tooltip" data-placement="top" title="{{ __('messages.edit') }}"><i class="fa fa-edit"></i></a>@endif&nbsp;
+                                @if(auth()->user()->isSuperAdmin() || auth()->user()->checkPermission(auth()->user(), $moduleName, 'canDelete'))
                                 <a href="{{ route($deleteUrl, ['id' => $list->id]) }}" class="btn btn-sm btn-danger btn-flat delete" data-toggle="tooltip" data-placement="top" data-title="{{ __('messages.confrim_title') }}" data-message="{{ __('messages.confirm_delete_message') }}" title="{{ __('messages.delete') }}""><i class=" fa fa-trash"></i></a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

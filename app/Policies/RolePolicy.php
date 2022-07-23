@@ -5,9 +5,11 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RolePolicy
+class RolePolicy extends BasePolicy
 {
     use HandlesAuthorization;
+
+    protected $module = 'role';
 
     /**
      * Create a new policy instance.
@@ -16,6 +18,6 @@ class RolePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 }

@@ -5,9 +5,11 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RecreationPolicy
+class RecreationPolicy extends BasePolicy
 {
     use HandlesAuthorization;
+
+    protected $module = 'recreation';
 
     /**
      * Create a new policy instance.
@@ -16,6 +18,6 @@ class RecreationPolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 }

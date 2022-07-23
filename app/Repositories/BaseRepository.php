@@ -69,4 +69,9 @@ abstract class BaseRepository implements BaseInterface
     {
         return $this->model::insert($data);
     }
+
+    public function multiDestroy(array $where)
+    {
+        return $this->modek->destroy($where);
+    }
 }

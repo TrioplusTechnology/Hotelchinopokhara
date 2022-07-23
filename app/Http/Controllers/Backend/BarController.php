@@ -35,7 +35,9 @@ class BarController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.bars') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.bars');
+        self::$data['moduleName'] = "bar";
+        self::$data['subHeading'] = __('messages.list');
         self::$data['lists'] =  $lists = $this->barService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.bar.create');
@@ -53,6 +55,7 @@ class BarController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.bars');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.bar.list');
         self::$data['requestUrl'] = route('admin.bar.store');
@@ -113,6 +116,7 @@ class BarController extends BackendController
         try {
             self::$data['bar'] = $this->barService->getById($id);
             self::$data['heading'] = __('messages.bars');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.bar.update', ['id' => self::$data['bar']->id]);
             self::$data['backUrl'] = route('admin.bar.list');
             self::$data['requestMethod'] = 'POST';

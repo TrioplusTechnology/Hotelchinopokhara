@@ -5,9 +5,11 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class EventPolicy
+class EventPolicy extends BasePolicy
 {
     use HandlesAuthorization;
+
+    protected $module = 'event';
 
     /**
      * Create a new policy instance.
@@ -16,6 +18,6 @@ class EventPolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 }

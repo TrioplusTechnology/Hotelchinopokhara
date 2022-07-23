@@ -34,12 +34,14 @@ class RoomFeatureController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.room_feature') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.room_feature');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "room-feature";
         self::$data['lists'] =  $lists = $this->roomFeatureService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
-        self::$data['addUrl']  = route('admin.room.feature.create');
-        self::$data['deleteUrl']  = 'admin.room.feature.destroy';
-        self::$data['editUrl']  = 'admin.room.feature.edit';
+        self::$data['addUrl']  = route('admin.roomtype.feature.create');
+        self::$data['deleteUrl']  = 'admin.roomtype.feature.destroy';
+        self::$data['editUrl']  = 'admin.roomtype.feature.edit';
 
         return view("backend.common.list", self::$data);
     }
@@ -52,9 +54,10 @@ class RoomFeatureController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.room_feature');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
-        self::$data['backUrl'] = route('admin.room.feature.list');
-        self::$data['requestUrl'] = route('admin.room.feature.store');
+        self::$data['backUrl'] = route('admin.roomtype.feature.list');
+        self::$data['requestUrl'] = route('admin.roomtype.feature.store');
         self::$data['requestMethod'] = 'POST';
         return view("backend.room.room_feature_form", self::$data);
     }
@@ -70,7 +73,7 @@ class RoomFeatureController extends BackendController
         try {
             $validated = $request->validated();
             $this->roomFeatureService->store($validated, $request);
-            return redirect()->route("admin.room.feature.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
+            return redirect()->route("admin.roomtype.feature.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -98,8 +101,9 @@ class RoomFeatureController extends BackendController
         try {
             self::$data['room'] = $this->roomFeatureService->getById($id);
             self::$data['heading'] = __('messages.room');
-            self::$data['requestUrl'] = route('admin.room.feature.update', ['id' => self::$data['room']->id]);
-            self::$data['backUrl'] = route('admin.room.feature.list');
+            self::$data['subHeading'] = __('messages.edit');
+            self::$data['requestUrl'] = route('admin.roomtype.feature.update', ['id' => self::$data['room']->id]);
+            self::$data['backUrl'] = route('admin.roomtype.feature.list');
             self::$data['requestMethod'] = 'POST';
             self::$data['btnName'] = __('messages.update');
 
@@ -122,7 +126,7 @@ class RoomFeatureController extends BackendController
             $validated = $request->validated();
             $this->roomFeatureService->update($validated, $id);
 
-            return redirect()->route("admin.room.feature.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
+            return redirect()->route("admin.roomtype.feature.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -143,7 +147,7 @@ class RoomFeatureController extends BackendController
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Module']),
-                'redirectUrl' => route("admin.room.feature.list")
+                'redirectUrl' => route("admin.roomtype.feature.list")
             ];
         } catch (Exception $e) {
             $response = [

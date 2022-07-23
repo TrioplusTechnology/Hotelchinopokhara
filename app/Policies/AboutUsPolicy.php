@@ -9,6 +9,8 @@ class AboutUsPolicy extends BasePolicy
 {
     use HandlesAuthorization;
 
+    protected $module = 'about-us';
+
     /**
      * Create a new policy instance.
      *
@@ -17,10 +19,5 @@ class AboutUsPolicy extends BasePolicy
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function viewList(User $user)
-    {
-        return $user->checkPermission($user, 'about-us', 'list-view');
     }
 }

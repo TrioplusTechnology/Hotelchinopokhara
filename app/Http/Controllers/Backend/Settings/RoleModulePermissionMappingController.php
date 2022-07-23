@@ -141,11 +141,11 @@ class RoleModulePermissionMappingController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RoleRequest $request, $roleId, $moduleId)
+    public function update(RoleModulePermissionMappingRequest $request, $roleId, $moduleId)
     {
         try {
             $validated = $request->validated();
-            $this->roleService->update($validated, $id);
+            $this->mappingService->update($validated, $roleId, $moduleId);
 
             return redirect()->route("admin.setting.mapping.list")->with('success', __('messages.success.update', ['RECORD' => 'Module']));
         } catch (Exception $e) {
@@ -159,16 +159,16 @@ class RoleModulePermissionMappingController extends BackendController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($roleId, $moduleId)
     {
         try {
-            $this->roleService->destroy($id);
+            $this->mappingService->destroy($roleId, $moduleId);
             session()->flash('success',  __('messages.success.delete', ['RECORD' => 'Role']));
             $response = [
                 'status' => 'success',
                 'code' => 200,
                 'message' => __('messages.success.delete', ['RECORD' => 'Role']),
-                'redirectUrl' => route("admin.setting.role_module_permission.list")
+                'redirectUrl' => route("admin.setting.mapping.list")
             ];
         } catch (Exception $e) {
             $response = [

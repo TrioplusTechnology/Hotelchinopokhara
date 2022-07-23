@@ -39,7 +39,9 @@ class RoomTypeController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.room') . ' ' . __('messages.type') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.room') . ' ' . __('messages.type');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "room-type";
         self::$data['lists'] =  $lists = $this->roomTypeService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.roomtype.create');
@@ -57,6 +59,7 @@ class RoomTypeController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.room') . ' ' . __('messages.type');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.roomtype.list');
         self::$data['requestUrl'] = route('admin.roomtype.store');
@@ -119,6 +122,7 @@ class RoomTypeController extends BackendController
         try {
             self::$data['room'] = $this->roomTypeService->getById($id);
             self::$data['heading'] = __('messages.room') . ' ' . __('messages.type');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.roomtype.update', ['id' => self::$data['room']->id]);
             self::$data['backUrl'] = route('admin.roomtype.list');
             self::$data['requestMethod'] = 'POST';

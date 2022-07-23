@@ -28,6 +28,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\RoleModulePermissionMapping' => 'App\Policies\RoleModulePermissionMappingPolicy',
         'App\Models\Service' => 'App\Policies\ServicePolicy',
         'App\Models\User' => 'App\Policies\UserPolicy',
+        'App\Models\Room\RoomType' => 'App\Policies\RoomTypePolicy',
+        'App\Models\Room\RoomFeature' => 'App\Policies\RoomFeaturePolicy',
     ];
 
     /**

@@ -5,9 +5,10 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RoleModulePermissionMappingPolicy
+class RoleModulePermissionMappingPolicy extends BasePolicy
 {
     use HandlesAuthorization;
+    protected $module = 'role-module-permission-mapping';
 
     /**
      * Create a new policy instance.
@@ -16,6 +17,6 @@ class RoleModulePermissionMappingPolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 }

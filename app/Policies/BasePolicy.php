@@ -4,8 +4,11 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route as FacadesRoute;
+use phpDocumentor\Reflection\Types\Boolean;
 
-class BasePolicy
+abstract class BasePolicy
 {
     use HandlesAuthorization;
 
@@ -28,6 +31,36 @@ class BasePolicy
      */
     public function before(User $user, $ability)
     {
-        return $user->isSuperAdmin();
+        if ($user->isSuperAdmin()) return true;
+    }
+
+    public function canViewList(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
+    }
+
+    public function canCreate(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
+    }
+
+    public function canUpdate(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
+    }
+
+    public function canDelete(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
+    }
+
+    public function canView(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
+    }
+
+    public function canApprove(User $user)
+    {
+        return $user->checkPermission($user, $this->module, __FUNCTION__);
     }
 }

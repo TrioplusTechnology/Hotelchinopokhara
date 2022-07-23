@@ -4,6 +4,7 @@ namespace App\Services\Backend\Settings;
 
 use App\Repositories\Backend\Settings\RoleModulePermissionRepository;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class RoleModulePermissionMappingService
 {
@@ -43,37 +44,30 @@ class RoleModulePermissionMappingService
     }
 
     /**
-     * Get data by id.
-     */
-    public function getRoleById($id)
-    {
-        $result = $this->roleRepository->getById($id);
-
-        if (empty($result)) {
-            throw new Exception(__('messages.error.not_found', ['RECORD' => 'role']), 404);
-        }
-
-        return $result;
-    }
-
-    /**
      * Updates about us
      */
-    public function update($data, $id)
+    public function update($data, $roleId, $moduleId)
     {
-        $result = $this->roleRepository->update($data, $id);
+        DB::beginTransaction();
+        try {
+            $dataToInsert = $this->prepareDataForMapping($data);
 
-        if (!$result) throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'role']), 501);
+            $this->roleModulePermissionRepository->deleteMappingData($roleId, $moduleId);
+            $result = $this->roleModulePermissionRepository->insert($dataToInsert);
 
-        return $result;
+            return $result;
+        } catch (Exception $e) {
+            DB::rollback();
+            throw new Exception(__('messages.error.failed_to_save', ['RECORD' => 'role']), 501);
+        }
     }
 
     /**
      * Deletes data
      */
-    public function destroy($id)
+    public function destroy($roleId, $moduleId)
     {
-        $result = $this->roleRepository->destroy($id);
+        $result = $this->roleModulePermissionRepository->deleteMappingData($roleId, $moduleId);
 
         if (!$result) throw new Exception(__('messages.error.failed_to_delete', ['RECORD' => 'role']), 422);
         return $result;

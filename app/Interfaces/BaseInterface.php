@@ -17,4 +17,6 @@ interface BaseInterface
     public function findAllWhere(array $data);
 
     public function insert(array $data);
+
+    public function multiDestroy(array $where);
 }

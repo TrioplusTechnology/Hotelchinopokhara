@@ -5,10 +5,10 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class BarPolicy
+class BarPolicy extends BasePolicy
 {
     use HandlesAuthorization;
-
+    protected $module = 'bar';
     /**
      * Create a new policy instance.
      *
@@ -16,6 +16,6 @@ class BarPolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 }

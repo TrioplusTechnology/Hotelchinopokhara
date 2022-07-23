@@ -29,8 +29,11 @@
                             <td>{{ $module->description }}</td>
                             <td><span class="badge badge-{{ $module->status ? 'success' : 'warning' }}">{{ $module->status ? 'Active' : 'Inactive' }}</span></td>
                             <td>
-                                <a href="{{ route('admin.setting.module.edit', ['id' => $module->id]) }}" class="btn btn-sm btn-success btn-flat" data-toggle="tooltip" data-placement="top" title="{{ __('messages.edit') }}"><i class="fa fa-edit"></i></a>&nbsp;
+                                @can('canUpdate', App\Models\About::class);
+                                <a href="{{ route('admin.setting.module.edit', ['id' => $module->id]) }}" class="btn btn-sm btn-success btn-flat" data-toggle="tooltip" data-placement="top" title="{{ __('messages.edit') }}"><i class="fa fa-edit"></i></a>@endcan&nbsp;
+                                @can('canDelete', App\Models\About::class)
                                 <a href="{{ route('admin.setting.module.destroy', ['id' => $module->id]) }}" class="btn btn-sm btn-danger btn-flat delete" data-toggle="tooltip" data-placement="top" data-title="{{ __('messages.confrim_title') }}" data-message="{{ __('messages.confirm_delete_message') }}" title="{{ __('messages.delete') }}""><i class=" fa fa-trash"></i></a>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

@@ -34,7 +34,9 @@ class AboutUsController extends BackendController
      */
     public function index()
     {
-        self::$data['heading'] = __('messages.about_us') . ' ' . __('messages.list');
+        self::$data['heading'] = __('messages.about_us');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "about-us";
         self::$data['lists'] =  $lists = $this->aboutUsService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.about_us.create');
@@ -52,6 +54,7 @@ class AboutUsController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.about_us');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.about_us.list');
         self::$data['requestUrl'] = route('admin.about_us.store');
@@ -97,7 +100,8 @@ class AboutUsController extends BackendController
     {
         try {
             self::$data['aboutUs'] = $this->aboutUsService->getById($id);
-            self::$data['heading'] = __('messages.edit');
+            self::$data['heading'] = __('messages.about_us');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.about_us.update', ['id' => self::$data['aboutUs']->id]);
             self::$data['backUrl'] = route('admin.about_us.list');
             self::$data['requestMethod'] = 'POST';

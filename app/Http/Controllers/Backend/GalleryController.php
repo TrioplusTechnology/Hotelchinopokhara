@@ -36,6 +36,8 @@ class GalleryController extends BackendController
     public function index()
     {
         self::$data['heading'] = __('messages.gallery') . ' ' . __('messages.list');
+        self::$data['subHeading'] = __('messages.list');
+        self::$data['moduleName'] = "gallery";
         self::$data['lists'] =  $lists = $this->galleryService->getAll();
         self::$data['keys'] = $this->getKeysFromExtractedData($lists);
         self::$data['addUrl']  = route('admin.gallery.create');
@@ -53,6 +55,7 @@ class GalleryController extends BackendController
     public function create()
     {
         self::$data['heading'] = __('messages.gallery');
+        self::$data['subHeading'] = __('messages.create');
         self::$data['btnName'] = __('messages.save');
         self::$data['backUrl'] = route('admin.gallery.list');
         self::$data['requestUrl'] = route('admin.gallery.store');
@@ -113,6 +116,7 @@ class GalleryController extends BackendController
         try {
             self::$data['gallery'] = $this->galleryService->getById($id);
             self::$data['heading'] = __('messages.gallery');
+            self::$data['subHeading'] = __('messages.edit');
             self::$data['requestUrl'] = route('admin.gallery.update', ['id' => self::$data['gallery']->id]);
             self::$data['backUrl'] = route('admin.gallery.list');
             self::$data['requestMethod'] = 'POST';
