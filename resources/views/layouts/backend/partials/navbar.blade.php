@@ -9,4 +9,15 @@
     </li>
 
   </ul>
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item">
+      <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+        @csrf
+      </form>
+      <a class="nav-link" href="#" role="button" data-toggle="tooltip" data-placement="bottom" title="Log out" onclick="$('#logout-form').submit();">
+        Log Out
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    </li>
+  </ul>
 </nav>
