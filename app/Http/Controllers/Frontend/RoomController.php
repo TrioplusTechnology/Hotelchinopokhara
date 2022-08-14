@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Services\Backend\Room\RoomService;
+use App\Services\Backend\Room\RoomTypeService;
 
 class RoomController extends FrontendController
 {
@@ -11,7 +11,7 @@ class RoomController extends FrontendController
      */
     private $roomService;
 
-    public function __construct(RoomService $roomService)
+    public function __construct(RoomTypeService $roomService)
     {
         parent::__construct();
 
