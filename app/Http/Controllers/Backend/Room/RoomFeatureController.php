@@ -75,6 +75,7 @@ class RoomFeatureController extends BackendController
             $this->roomFeatureService->store($validated, $request);
             return redirect()->route("admin.roomtype.feature.list")->with('success', __('messages.success.save', ['RECORD' => 'Module']));
         } catch (Exception $e) {
+            dd($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
